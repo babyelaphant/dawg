@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@export var movement_speed : float = 300
+@export var movement_speed : float = 200
 var character_direction : Vector2
 
 var num_of_funko_pops = 0
