@@ -16,6 +16,11 @@ config/features=PackedStringArray("4.6", "Forward Plus")
 boot_splash/bg_color=Color(0, 0, 0, 1)
 config/icon="res://icon.svg"
 
+[autoload]
+
+Game_Manager="*uid://bxhbg8kyygs6h"
+G_Globals="*uid://cvmjc5websn0y"
+
 [input]
 
 move_left={

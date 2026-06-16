@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://q4grnsjo81v6"]
+
+[ext_resource type="Script" uid="uid://6vnv8ntdkupa" path="res://scripts/GuideDog.gd" id="1_ks2uj"]
+[ext_resource type="Texture2D" uid="uid://dopk150l0r6cv" path="res://assets/icon.svg" id="2_t4hbm"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_o6xl0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_t4hbm")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="GuideDog" type="CharacterBody2D" unique_id=1338871032]
+z_index = 1
+script = ExtResource("1_ks2uj")
+move_speed = 10.0
+
+[node name="AnimatedSprite" type="AnimatedSprite2D" parent="." unique_id=1070021760]
+scale = Vector2(0.05, 0.05)
+sprite_frames = SubResource("SpriteFrames_o6xl0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1393575306]
