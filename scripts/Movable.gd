@@ -3,9 +3,11 @@ extends CharacterBody2D
 
 @export var move_speed: float
 @onready var sprite:AnimatedSprite2D = $AnimatedSprite
-var move_direction:Vector2
+var move_direction:Vector2 = Vector2.ZERO
 var can_move:float = false
 var target_anim = ""
+var ai_controlled:bool = false
+@export var is_ai:bool = false
 
 @export var _animations:Array[String]
 # Called when the node enters the scene tree for the first time.

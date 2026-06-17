@@ -18,6 +18,7 @@ var stop_interval = 0
 var waiting_for_response :bool = false
 var response_delay:float= 0
 var critical_response_delay = 4
+var guide_dog:GuideDog
 
 @export var test:Sprite2D
 
@@ -45,7 +46,7 @@ class NervousenessLevel:
 	func increase_nervouseness(nervouseness) -> void:
 		if _current_nervouseness < _max_nervouseness:
 			_current_nervouseness += nervouseness
-			_dogowner.total_nervouseness  += _current_nervouseness
+			_dogowner.total_nervouseness += nervouseness
 			
 			Game_Manager._ui.increase_nervouseness_meter(nervouseness)
 		elif _current_nervouseness >= _max_nervouseness and currentLevel < 9:
@@ -68,20 +69,27 @@ func command_dog(repeat:bool = false):
 		else:
 			current_command = "STOP"
 	
+	else:
+		print("repeating cmd")
+	
 	Game_Manager._ui.show_command(current_command)
 	response_delay = 0
 	waiting_for_response = true
-	while response_delay < critical_response_delay and !Game_Manager._dog.respond_to_command(current_command):
+	while response_delay < critical_response_delay and !guide_dog.respond_to_command(current_command):
 		await get_tree().process_frame
 		response_delay += get_process_delta_time()
-	waiting_for_response = false
 
 	if response_delay >= critical_response_delay:
 		command_dog(true)
+		print("critical response delayy")
+		print("making nervous")
 		make_nervous(4)
 	else:
 		make_nervous(response_delay)
-		
+		print("not waiting for respo")
+		waiting_for_response = false
+
+
 #Make the bus driver angry
 func make_nervous(nervouseness_amount) -> void:
 	nervouseness_levels[NervousenessLevel.currentLevel].increase_nervouseness(nervouseness_amount)
@@ -101,24 +109,28 @@ func _ready() -> void:
 	for i in range(10):
 		nervouseness_levels.append(NervousenessLevel.new(self, 30+i*7))
 			
-func initialize() -> void:
-	Game_Manager._dog.on_started_moving.connect(on_dog_started_moving)
+func initialize(guidedog:GuideDog) -> void:
+	guide_dog = guidedog
+	guide_dog.on_started_moving.connect(on_dog_started_moving)
 	# Called every frame. 'delta' is the elapsed time since the previous frame.
 	
 func _process(delta: float) -> void:
-	if waiting_for_response:
+	if is_ai:
+		return
+		
+	if waiting_for_response or guide_dog.eating_food:
 		timer = 0
 		return
 		
 	timer += delta
-
+	print("current cmd: ", current_command)
 	if current_command == "GO":
 		if timer > go_interval_min and timer < go_interval_max:
 			var random = randi()%100
 			if random < nervouseness_levels[NervousenessLevel.currentLevel]._max_nervouseness:
 				command_dog(false)
 			timer = 0
-		elif !Game_Manager._dog.respond_to_command(current_command):
+		elif !guide_dog.respond_to_command(current_command):
 			make_nervous(4);
 			command_dog(true)
 			print("DISOBEYED, REPEATING COMMAND GO")
@@ -128,7 +140,7 @@ func _process(delta: float) -> void:
 		if timer > stop_interval:
 			command_dog(false)
 			timer = 0
-		elif !Game_Manager._dog.respond_to_command(current_command):
+		elif !guide_dog.respond_to_command(current_command):
 			make_nervous(4);
 			command_dog(true)
 			print("DISOBEYED, REPEATING COMMAND STOP")
@@ -144,24 +156,24 @@ func on_dog_started_moving() -> void:
 	if avoiding_obstacles:
 		return
 	var temp :Vector2 = find_random_target_offset()
-	if temp != Vector2.ZERO and Game_Manager._dog.move_direction != Vector2.ZERO:target_offset = temp
+	if temp != Vector2.ZERO and guide_dog.move_direction != Vector2.ZERO:target_offset = temp
 
 func check_obstacles():
 	
 	var hitResult = {}
-	var to_dog = (Game_Manager._dog.global_position - global_position)
+	var to_dog = (guide_dog.global_position - global_position)
 	var perpendicular = to_dog.normalized().rotated(PI/2)
-	var offsets = [-10, 0, 10]
+	var offsets = [-7, 0, 7]
 	var temp = 0
 	var min_temp = 0
 	
 	for i in range(3):
 		var offset = perpendicular * offsets[i]
 		var from = global_position-to_dog.normalized()*2 + offset
-		var to = Game_Manager._dog.global_position
+		var to = guide_dog.global_position
 		
 		var query = PhysicsRayQueryParameters2D.create(from, to)
-		query.exclude = [self, Game_Manager._dog]
+		query.exclude = [self, guide_dog]
 		var result = get_world_2d().direct_space_state.intersect_ray(query)
 			
 		if  !result.is_empty():
@@ -182,7 +194,7 @@ func check_obstacles():
 		line.default_color = Color.BLACK
 		if !result.is_empty():
 			line.default_color = Color.RED
-	return !hitResult.is_empty() and min_temp +5< (Game_Manager._dog.global_position-global_position).length()
+	return !hitResult.is_empty() and min_temp +5< (guide_dog.global_position-global_position).length()
 
 func _physics_process(delta):
 	if !can_follow:	
@@ -190,11 +202,11 @@ func _physics_process(delta):
 		return
 
 	var temp1 :Vector2 = find_random_target_offset()
-	if temp1 != Vector2.ZERO and Game_Manager._dog.move_direction != Vector2.ZERO:target_offset = temp1
+	if temp1 != Vector2.ZERO and guide_dog.move_direction != Vector2.ZERO:target_offset = temp1
 		
 	#check_obstacles()
-	#if Game_Manager._dog.velocity.length() > 0:move_direction = Game_Manager._dog.move_direction
-	move_speed = Game_Manager._dog.move_speed
+	#if guide_dog.velocity.length() > 0:move_direction = guide_dog.move_direction
+	move_speed = guide_dog.move_speed
 	
 	print("to: ", target_offset)
 	var hitResult = {}
@@ -209,7 +221,7 @@ func _physics_process(delta):
 			from,
 			to
 		)
-		query.exclude = [self, Game_Manager._dog]
+		query.exclude = [self, guide_dog]
 		
 		var result = get_world_2d().direct_space_state.intersect_ray(query)
 		#line.clear_points()
@@ -220,49 +232,52 @@ func _physics_process(delta):
 		if !result.is_empty() and hitResult.is_empty():
 			hitResult = result
 
-	if Game_Manager._dog.is_near_wall and !avoiding_obstacles:
-		var temp = Game_Manager._dog.global_position - Game_Manager._dog.move_direction* 10
-		if abs(Game_Manager._dog.move_direction.angle_to(Game_Manager._dog.wall_normal)) >= PI/2:
+	if guide_dog.is_near_wall and !avoiding_obstacles:
+		var temp = guide_dog.global_position - guide_dog.move_direction* 10
+		if abs(guide_dog.move_direction.angle_to(guide_dog.wall_normal)) >= PI/2:
 			print("kalender")
-			temp += Game_Manager._dog.wall_normal * 10
+			temp += guide_dog.wall_normal * 10
 			
-		if Game_Manager._dog.move_direction != Vector2.ZERO:
+		if guide_dog.move_direction != Vector2.ZERO:
 			target_offset = temp
-			target_offset = target_offset - Game_Manager._dog.global_position
+			target_offset = target_offset - guide_dog.global_position
 	
 	if avoiding_obstacles:
-		target_offset = saved_dog_pos - Game_Manager._dog.global_position
+		target_offset = saved_dog_pos - guide_dog.global_position
 
-	move_direction = (Game_Manager._dog.global_position + target_offset - global_position).normalized()
+	move_direction = (guide_dog.global_position + target_offset - global_position).normalized()
 	
-	can_move = (hitResult.is_empty() or check_obstacles()) and (Game_Manager._dog.global_position + target_offset-global_position).length() > 0.1 and (Game_Manager._dog.global_position-global_position).length() > Game_Manager.dog_position_offset.length()
-	print("dist to target: ", (Game_Manager._dog.global_position + target_offset-global_position).length())
+	if! guide_dog.is_ai:
+		can_move = (hitResult.is_empty() or check_obstacles()) and (guide_dog.global_position + target_offset-global_position).length() > 0.1 and (guide_dog.global_position-global_position).length() > Game_Manager.dog_position_offset.length()
+	else:
+		can_move = (hitResult.is_empty() or check_obstacles()) and (guide_dog.global_position + target_offset-global_position).length() > 0.1 and (guide_dog.global_position-global_position).length() > Game_Manager.ai_dog_position_offset.length()
+	print("dist to target: ", (guide_dog.global_position + target_offset-global_position).length())
 	print("hitresult empty: ",hitResult.is_empty() , " avoiding obs ", avoiding_obstacles )
-	test.global_position = Game_Manager._dog.global_position + target_offset
+	test.global_position = guide_dog.global_position + target_offset
 	
 	#test.global_position = saved_dog_pos
 	
-	if !check_obstacles() and !avoiding_obstacles and Game_Manager._dog.movement_cache.size() > 0:
+	if !check_obstacles() and !avoiding_obstacles and guide_dog.movement_cache.size() > 0:
 		print("reset cache")
-		Game_Manager._dog.movement_cache.clear()
-		Game_Manager._dog.is_building=false
+		guide_dog.movement_cache.clear()
+		guide_dog.is_building=false
 		saved_dog_positions.clear()
 	
-	if Game_Manager._dog.is_near_wall:
-		saved_wallnormal = Game_Manager._dog.wall_normal*5
+	if guide_dog.is_near_wall:
+		saved_wallnormal = guide_dog.wall_normal*5
 
 	if can_move:	
 		print("can move!")
-		if Game_Manager._dog.movement_cache.size() == 0:
+		if guide_dog.movement_cache.size() == 0:
 			print("cache size = 0")
-			move_direction = (Game_Manager._dog.global_position + target_offset - global_position).normalized()
+			move_direction = (guide_dog.global_position + target_offset - global_position).normalized()
 		get_move_direction = false
 		velocity = move_direction.normalized() * move_speed
-		#Game_Manager._dog.movement_cache = []
+		#guide_dog.movement_cache = []
 		move()
 	else:
 		print("cant move")
-		Game_Manager._dog.reset_movement_cache()
+		guide_dog.reset_movement_cache()
 		idle()
 	
 	if velocity.length() < 0.1:
@@ -273,15 +288,15 @@ func _physics_process(delta):
 		avoiding_obstacles = false
 
 		
-	print("CANMOVE: ", can_move, " target dist: ",(Game_Manager._dog.global_position + target_offset-global_position).length(), " env hit: ", !hitResult.is_empty() , " obs hit: ", check_obstacles())
+	print("CANMOVE: ", can_move, " target dist: ",(guide_dog.global_position + target_offset-global_position).length(), " env hit: ", !hitResult.is_empty() , " obs hit: ", check_obstacles())
 	if(check_obstacles() and !avoiding_obstacles) :
 	
-		if(Game_Manager._dog.movement_cache.is_empty() and !Game_Manager._dog.is_building ):
+		if(guide_dog.movement_cache.is_empty() and !guide_dog.is_building ):
 			print("building movement cache")
-			Game_Manager._dog.build_movement_cache()
+			guide_dog.build_movement_cache()
 		
 		if !get_move_direction :
-			saved_dog_pos = Game_Manager._dog.pop_movement_cache()
+			saved_dog_pos = guide_dog.pop_movement_cache()
 			print("sv dogpos",saved_dog_pos )
 			
 			saved_dog_positions.append(saved_dog_pos)
@@ -295,20 +310,20 @@ func _physics_process(delta):
 		
 func find_random_target_offset():
 	
-	if Game_Manager._dog.move_direction != Vector2.UP and Game_Manager._dog.move_direction != Vector2.RIGHT and  Game_Manager._dog.move_direction != Vector2.LEFT and Game_Manager._dog.move_direction != Vector2.DOWN:
+	if guide_dog.move_direction != Vector2.UP and guide_dog.move_direction != Vector2.RIGHT and  guide_dog.move_direction != Vector2.LEFT and guide_dog.move_direction != Vector2.DOWN:
 		return Vector2.ZERO
 	
-	if Game_Manager._dog.is_near_wall:
+	if guide_dog.is_near_wall:
 		return Vector2.ZERO
 		
 	var target = Vector2.ZERO
-	var targets = [Game_Manager._dog.global_position  -  Game_Manager._dog.move_direction*10 + Game_Manager._dog.move_direction.rotated(PI/2)*10,
-				Game_Manager._dog.global_position  -  Game_Manager._dog.move_direction*10 + Game_Manager._dog.move_direction.rotated(-PI/2)*10]
+	var targets = [guide_dog.global_position  -  guide_dog.move_direction*10 + guide_dog.move_direction.rotated(PI/2)*10,
+				guide_dog.global_position  -  guide_dog.move_direction*10 + guide_dog.move_direction.rotated(-PI/2)*10]
 	
 	if ((global_position-targets[0]).length() > (global_position-targets[1]).length()):
 		target = targets[1]
 	else:
 		target = targets[0]
 	
-	print("target offset: ", target - Game_Manager._dog.global_position)
-	return target - Game_Manager._dog.global_position
+	print("target offset: ", target - guide_dog.global_position)
+	return target - guide_dog.global_position

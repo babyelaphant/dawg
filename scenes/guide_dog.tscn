@@ -15,6 +15,7 @@ animations = [{
 }]
 
 [node name="GuideDog" type="CharacterBody2D" unique_id=1338871032]
+process_mode = 1
 z_index = 1
 script = ExtResource("1_ks2uj")
 move_speed = 10.0

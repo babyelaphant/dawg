@@ -514,6 +514,7 @@ animations = [{
 }]
 
 [node name="Dog Owner" type="CharacterBody2D" unique_id=101522349]
+process_mode = 1
 z_index = 1
 script = ExtResource("1_nioo4")
 move_speed = 50.0
