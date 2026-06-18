@@ -5,7 +5,7 @@ var old_move_direction:Vector2 = Vector2.ZERO
 
 signal on_move_direction_changed
 signal on_wall_normal_changed
-signal on_started_moving
+signal on_started_moving(dog)
 
 var directions: Array[Vector2] = [Vector2.UP,Vector2.RIGHT, Vector2.DOWN,Vector2.LEFT]
 var wall_normal:Vector2
@@ -20,6 +20,9 @@ var offset:Vector2 = Vector2.ZERO
 var eating_food:bool = false
 var _owner:DogDowner
 var ai_waypoint_index:int = 1
+var dogs:Array[GuideDog] = []
+var initialized = false
+var can_update_movement_cache:bool = true
 
 @export var distractionsources: Node2D
 @export var test:Sprite2D
@@ -37,11 +40,12 @@ func _ready() -> void:
 
 func check_obstacles():
 	var hitResult = {}
-	for i in range(3):
+	for i in range(1,2):
 		
 		var line  = get_node("Line2D" + str(i))
 		var space_state = get_world_2d().direct_space_state
 		var from = global_position - move_direction.rotated(PI/2)*3 + i * move_direction.rotated(PI/2) * 3
+		from = global_position
 		var to = from + move_direction*5
 		var query = PhysicsRayQueryParameters2D.create(
 			from,
@@ -60,14 +64,15 @@ func build_movement_cache():
 	var timer = 0
 	if is_building: return
 	is_building = true
+
 	while is_building:		
-		if can_move:
-			if !check_obstacles() and move_direction == Vector2.UP or move_direction == Vector2.RIGHT or move_direction == Vector2.DOWN or move_direction == Vector2.LEFT:
+		if can_move and !check_obstacles():
+			if  move_direction == Vector2.UP or move_direction == Vector2.RIGHT or move_direction == Vector2.DOWN or move_direction == Vector2.LEFT:
 				print("offseti: ", offset)
 				if movement_cache.size() == 0:
-					movement_cache.append(global_position -move_direction*5)
+					movement_cache.append(global_position+wall_normal*3)
 				else:
-					movement_cache.append(global_position + offset)
+					movement_cache.append(global_position+wall_normal*3)
 		#test.global_position = global_position	
 		await get_tree().create_timer(.25).timeout	
 		#if movement_cache.is_empty():
@@ -91,6 +96,7 @@ func _process(delta: float) -> void:
 	if timer > wall_check_interval:
 		wall_check()
 		timer = 0
+	print("walln: ", wall_normal)
 
 func reset_movement_cache():
 	is_building = false
@@ -107,17 +113,38 @@ func respond_to_command(current_command) -> bool:
 func _physics_process(delta: float) -> void:
 	
 	if eating_food: return
+		
+	if !initialized:
+		return
 	
 	if !can_move:
 		velocity = Vector2.ZERO
 		#return
 	
-	#ai_controlled =  !abs(Input.get_axis("move_left", "move_right")) > 0.01 \
-	#and !abs(Input.get_axis("move_up", "move_down")) > 0.01
+
+	var nearby_dog = smells_dog()
 	
-	ai_controlled =  smells_dog_food()
+	var distance_to_food = (global_position - distractionsources.get_node("DogFood").global_position).length()
 	
-	if !is_ai:
+	if is_ai:
+		ai_controlled =  !nearby_dog.is_empty() and abs((nearby_dog[0] as GuideDog).move_direction.angle_to(move_direction)) > PI/2
+	else:
+		ai_controlled =  abs(Input.get_axis("move_left", "move_right")) < 0.1 \
+		and abs(Input.get_axis("move_up", "move_down")) < 0.1 and ((smells_dog_food() and distance_to_food <=40) or (!nearby_dog.is_empty()) and (velocity.length() < 0.1 or  abs((nearby_dog[0] as GuideDog).move_direction.angle_to(move_direction)) > PI/2))
+	
+	if !ai_controlled:move_speed=30
+	
+	if ai_controlled and nearby_dog != []:
+		print("smells dog")
+		move_direction = (nearby_dog[0].global_position - global_position).normalized()
+		move_speed = 30 + ((nearby_dog[0].global_position - global_position).length()/50)*10
+		if move_direction.length() > 0.1:
+			velocity = move_direction.normalized()* move_speed
+		else:
+			velocity = velocity.move_toward(Vector2.ZERO, move_speed)
+		move_and_slide()
+		
+	elif !is_ai:
 		if !ai_controlled:
 			move_direction.x = Input.get_axis("move_left", "move_right")
 			move_direction.y = Input.get_axis("move_up", "move_down")
@@ -128,35 +155,51 @@ func _physics_process(delta: float) -> void:
 		elif !Game_Manager.is_objective_completed("find_food") and smells_dog_food():
 			
 			print("smells dog food")
-			move_direction = (distractionsources.get_node("DogFood").global_position - global_position)
-			move_speed = 20 + (move_direction.length()/40)*10
-			if move_direction.length() > 0.1:
+			
+			if distance_to_food < 40:
+				move_direction = (distractionsources.get_node("DogFood").global_position - global_position).normalized()
+				move_speed = 30 + (distance_to_food/40)*10
+			else:
+				move_speed = 30 + (distance_to_food/200)*10
+				
+			if distance_to_food > 0.1:
 				velocity = move_direction.normalized()* move_speed
 			else:
 				velocity = velocity.move_toward(Vector2.ZERO, move_speed)
 				if !eating_food:
 					eating_food = true
 					eat_food()
+					
 		else:
 			velocity = velocity.move_toward(Vector2.ZERO, move_speed)		
 			
-		if !eating_food:
+		if !is_ai and !eating_food:
+			if _owner.check_obstacles():
+				pass
+				#move_speed = 15
+			#move_speed = 20
+			#if (global_position - _owner.global_position).length() < 20:
+				#velocity = move_direction.normalized()* move_speed
 			move_and_slide()	
 	
-	elif can_move:
+	elif can_move and !ai_controlled:
 		print("moving ai")
+		on_started_moving.emit(self)
 		move_ai()
-	
+		
 	if(move_direction-old_move_direction).length() > 0.1:
+		can_update_movement_cache = false
 		if old_move_direction == Vector2.ZERO:
-			on_started_moving.emit()
+			on_started_moving.emit(self)
 			can_move=true
 			#build_movement_cache()
 		if velocity.length() > 0 and move_direction != Vector2.ZERO:
 			on_move_direction_changed.emit()
-			if !check_obstacles() and old_move_direction == Vector2.UP or old_move_direction == Vector2.RIGHT or old_move_direction == Vector2.DOWN or old_move_direction== Vector2.LEFT:
-				offset = old_move_direction * 5
-			
+			#if old_move_direction == Vector2.UP or old_move_direction == Vector2.RIGHT or old_move_direction == Vector2.DOWN or old_move_direction== Vector2.LEFT:
+			#offset = old_move_direction
+			offset = wall_normal
+	else:
+		can_update_movement_cache = true
 	if move_direction and within_max_distance():
 		velocity = move_direction * move_speed
 	else:
@@ -176,9 +219,9 @@ func move_ai():
 	
 	if ai_waypoint_index >= ai_path.get_children().size():
 		return
-	move_direction = ai_path.get_child(ai_waypoint_index).global_position - ai_path.get_child(ai_waypoint_index-1).global_position
-	if (ai_path.get_child(ai_waypoint_index).global_position - global_position).length() > 2:
-		velocity = move_direction.normalized() * move_speed
+	move_direction = (ai_path.get_child(ai_waypoint_index).global_position - global_position).normalized()
+	if (ai_path.get_child(ai_waypoint_index).global_position - global_position).length() > 1:
+		velocity = move_direction * move_speed
 		move_and_slide()
 	elif ai_waypoint_index < ai_path.get_children().size():
 		ai_waypoint_index += 1
@@ -196,6 +239,10 @@ func eat_food():
 
 func initialize(owner:DogDowner):
 	_owner = owner
+	initialized = true
+	findByNameTag(get_tree().current_scene, "GuideDog", dogs)
+	print("DOGS: ", dogs)
+	
 	
 func within_max_distance() -> bool:
 	var dist = (move_direction+global_position-global_position).length()
@@ -218,7 +265,7 @@ func wall_check():
 		if !result.is_empty():
 			found_wall = true	
 			wall_normal = result.normal
-			print(result.collider)
+			print("wallnormal: ", wall_normal)
 			is_near_wall = true
 			if(wall_normal.distance_to(old_wall_normal) > 0.3):
 				on_wall_normal_changed.emit(wall_normal,old_wall_normal)
@@ -236,5 +283,20 @@ func switchedDirections() -> bool:
 	return abs(old_move_direction.angle_to(move_direction)) > PI/1.5
 
 func smells_dog_food():
-	return (global_position - distractionsources.get_node("DogFood").global_position).length() < 40
-	
+	return (global_position - distractionsources.get_node("DogFood").global_position).length() < 200
+
+
+func findByNameTag(node: Node, tag : String, result : Array) -> void:
+	for child in node.get_children():
+		print("child: ", child)
+		if tag in child.name:
+			result.push_back(child)
+		findByNameTag(child, tag, result)
+		
+func smells_dog() -> Array[GuideDog]:
+	for i in range(dogs.size()):
+		if dogs[i] == self:
+			continue
+		if (dogs[i].global_position - global_position).length() < 100:
+			return [dogs[i]]
+	return []

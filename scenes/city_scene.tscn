@@ -119717,7 +119717,7 @@ metadata/_edit_lock_ = true
 process_mode = 1
 z_index = 6
 z_as_relative = false
-position = Vector2(1188, 319)
+position = Vector2(280, 1335)
 motion_mode = 1
 up_direction = Vector2(0, 1)
 slide_on_ceiling = false
@@ -119740,7 +119740,6 @@ position = Vector2(0.88742065, -0.053955078)
 zoom = Vector2(2.53, 2.53)
 
 [node name="Line2D0" type="Line2D" parent="Dog Owner" unique_id=707706796]
-visible = false
 z_as_relative = false
 points = PackedVector2Array(-24, 5)
 default_color = Color(0.38039216, 1, 0.21960784, 1)
@@ -119750,16 +119749,7 @@ z_as_relative = false
 points = PackedVector2Array(-24, 5)
 default_color = Color(0.38039216, 1, 0.21960784, 1)
 
-[node name="CollisionShape2D10" type="CollisionShape2D" parent="Dog Owner/Line2D1" unique_id=1530856569]
-position = Vector2(158.5, 1369)
-shape = SubResource("RectangleShape2D_cb3sn")
-
-[node name="CollisionShape2D10" type="CollisionShape2D" parent="Dog Owner/Line2D1/CollisionShape2D10" unique_id=2107241653]
-position = Vector2(158.5, 1369)
-shape = SubResource("RectangleShape2D_cb3sn")
-
 [node name="Line2D2" type="Line2D" parent="Dog Owner" unique_id=630856999]
-visible = false
 z_as_relative = false
 points = PackedVector2Array(-24, 5)
 default_color = Color(0.38039216, 1, 0.21960784, 1)
@@ -119768,7 +119758,7 @@ default_color = Color(0.38039216, 1, 0.21960784, 1)
 process_mode = 1
 z_index = 6
 z_as_relative = false
-position = Vector2(1176, 326)
+position = Vector2(272, 1350)
 scale = Vector2(0.5, 0.5)
 motion_mode = 1
 up_direction = Vector2(0, 1)
@@ -119776,7 +119766,6 @@ slide_on_ceiling = false
 script = ExtResource("13_picbe")
 distractionsources = NodePath("../DistractionSources")
 test = NodePath("../Test")
-move_speed = 15.0
 _animations = Array[String](["walk_n", "walk_ne", "walk_e", "walk_se", "walk_s", "walk_sw", "walk_w", "walk_nw"])
 
 [node name="AnimatedSprite" type="AnimatedSprite2D" parent="GuideDog" unique_id=854925771]
@@ -119802,7 +119791,7 @@ z_index = -1
 process_mode = 1
 z_index = 6
 z_as_relative = false
-position = Vector2(820, 15)
+position = Vector2(800, 15)
 motion_mode = 1
 up_direction = Vector2(0, 1)
 slide_on_ceiling = false
@@ -119836,25 +119825,17 @@ z_as_relative = false
 points = PackedVector2Array(-24, 5)
 default_color = Color(0.38039216, 1, 0.21960784, 1)
 
-[node name="CollisionShape2D10" type="CollisionShape2D" parent="AI_Dog_Owner/Line2D1" unique_id=735030405]
-position = Vector2(158.5, 1369)
-shape = SubResource("RectangleShape2D_cb3sn")
-
-[node name="CollisionShape2D10" type="CollisionShape2D" parent="AI_Dog_Owner/Line2D1/CollisionShape2D10" unique_id=216216247]
-position = Vector2(158.5, 1369)
-shape = SubResource("RectangleShape2D_cb3sn")
-
 [node name="Line2D2" type="Line2D" parent="AI_Dog_Owner" unique_id=698060080]
 visible = false
 z_as_relative = false
 points = PackedVector2Array(-24, 5)
 default_color = Color(0.38039216, 1, 0.21960784, 1)
 
-[node name="AI_Dog" type="CharacterBody2D" parent="." unique_id=604306923 node_paths=PackedStringArray("distractionsources", "test", "ai_path")]
+[node name="AI_GuideDog" type="CharacterBody2D" parent="." unique_id=604306923 node_paths=PackedStringArray("distractionsources", "test", "ai_path")]
 process_mode = 1
 z_index = 6
 z_as_relative = false
-position = Vector2(808, 22)
+position = Vector2(808, 31)
 scale = Vector2(0.5, 0.5)
 motion_mode = 1
 up_direction = Vector2(0, 1)
@@ -119863,27 +119844,105 @@ script = ExtResource("13_picbe")
 distractionsources = NodePath("../DistractionSources")
 test = NodePath("../Test")
 ai_path = NodePath("../AI_Dog_Path")
-move_speed = 15.0
 is_ai = true
 _animations = Array[String](["walk_n", "walk_ne", "walk_e", "walk_se", "walk_s", "walk_sw", "walk_w", "walk_nw"])
 
-[node name="AnimatedSprite" type="AnimatedSprite2D" parent="AI_Dog" unique_id=264084877]
+[node name="AnimatedSprite" type="AnimatedSprite2D" parent="AI_GuideDog" unique_id=264084877]
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_jbj1t")
 animation = &"walk_w"
 frame_progress = 0.17786928
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AI_Dog" unique_id=130159421]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AI_GuideDog" unique_id=130159421]
 position = Vector2(0.94750977, 3.519287)
 shape = SubResource("RectangleShape2D_k1ip8")
 
-[node name="Line2D" type="Line2D" parent="AI_Dog" unique_id=615073513]
+[node name="Line2D" type="Line2D" parent="AI_GuideDog" unique_id=615073513]
 z_index = -1
 
-[node name="Line2D1" type="Line2D" parent="AI_Dog" unique_id=1435324296]
+[node name="Line2D1" type="Line2D" parent="AI_GuideDog" unique_id=1435324296]
 z_index = -1
 
-[node name="Line2D3" type="Line2D" parent="AI_Dog" unique_id=2014869845]
+[node name="Line2D3" type="Line2D" parent="AI_GuideDog" unique_id=2014869845]
+z_index = -1
+
+[node name="AI_Dog_Owner2" type="CharacterBody2D" parent="." unique_id=1000335644 node_paths=PackedStringArray("test")]
+process_mode = 1
+z_index = 6
+z_as_relative = false
+position = Vector2(1472, 1367)
+motion_mode = 1
+up_direction = Vector2(0, 1)
+slide_on_ceiling = false
+script = ExtResource("12_picbe")
+test = NodePath("../Test")
+is_ai = true
+_animations = Array[String](["walk_n", "walk_ne", "walk_e", "walk_se", "walk_s", "walk_sw", "walk_w", "move_nw"])
+
+[node name="AnimatedSprite" type="AnimatedSprite2D" parent="AI_Dog_Owner2" unique_id=1477507290]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_jbj1t")
+animation = &"walk_w"
+frame_progress = 0.17786928
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AI_Dog_Owner2" unique_id=11011413]
+position = Vector2(0.78897095, 5.000122)
+shape = SubResource("RectangleShape2D_nmqce")
+
+[node name="Camera2D" type="Camera2D" parent="AI_Dog_Owner2" unique_id=1465295052]
+position = Vector2(0.88742065, -0.053955078)
+zoom = Vector2(2.53, 2.53)
+
+[node name="Line2D0" type="Line2D" parent="AI_Dog_Owner2" unique_id=509293294]
+visible = false
+z_as_relative = false
+points = PackedVector2Array(-24, 5)
+default_color = Color(0.38039216, 1, 0.21960784, 1)
+
+[node name="Line2D1" type="Line2D" parent="AI_Dog_Owner2" unique_id=1796797519]
+z_as_relative = false
+points = PackedVector2Array(-24, 5)
+default_color = Color(0.38039216, 1, 0.21960784, 1)
+
+[node name="Line2D2" type="Line2D" parent="AI_Dog_Owner2" unique_id=714463499]
+visible = false
+z_as_relative = false
+points = PackedVector2Array(-24, 5)
+default_color = Color(0.38039216, 1, 0.21960784, 1)
+
+[node name="AI_GuideDog2" type="CharacterBody2D" parent="." unique_id=1743503879 node_paths=PackedStringArray("distractionsources", "test", "ai_path")]
+process_mode = 1
+z_index = 6
+z_as_relative = false
+position = Vector2(1480, 1383)
+scale = Vector2(0.5, 0.5)
+motion_mode = 1
+up_direction = Vector2(0, 1)
+slide_on_ceiling = false
+script = ExtResource("13_picbe")
+distractionsources = NodePath("../DistractionSources")
+test = NodePath("../Test")
+ai_path = NodePath("../AI_Dog_Path2")
+is_ai = true
+_animations = Array[String](["walk_n", "walk_ne", "walk_e", "walk_se", "walk_s", "walk_sw", "walk_w", "walk_nw"])
+
+[node name="AnimatedSprite" type="AnimatedSprite2D" parent="AI_GuideDog2" unique_id=877138312]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_jbj1t")
+animation = &"walk_w"
+frame_progress = 0.17786928
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AI_GuideDog2" unique_id=395808707]
+position = Vector2(0.94750977, 3.519287)
+shape = SubResource("RectangleShape2D_k1ip8")
+
+[node name="Line2D" type="Line2D" parent="AI_GuideDog2" unique_id=1404519778]
+z_index = -1
+
+[node name="Line2D1" type="Line2D" parent="AI_GuideDog2" unique_id=375023945]
+z_index = -1
+
+[node name="Line2D3" type="Line2D" parent="AI_GuideDog2" unique_id=319056240]
 z_index = -1
 
 [node name="Test" type="Sprite2D" parent="." unique_id=296715130]
@@ -119980,11 +120039,11 @@ theme_override_font_sizes/font_size = 16
 text = "Continue"
 
 [node name="DistractionSources" type="Node2D" parent="." unique_id=56103161]
-scale = Vector2(1.1561437, 1.136065)
+position = Vector2(0, -1)
 
 [node name="DogFood" type="Sprite2D" parent="DistractionSources" unique_id=517389740]
 z_index = 11
-position = Vector2(193.74754, 1006.10443)
+position = Vector2(220.25563, 1215)
 scale = Vector2(0.025, 0.025)
 texture = ExtResource("18_cmvai")
 
@@ -120031,6 +120090,9 @@ position = Vector2(0, 687)
 [node name="Npc_Spawn" type="Node2D" parent="." unique_id=250691542]
 position = Vector2(808, 23)
 
+[node name="Npc_Spawn2" type="Node2D" parent="." unique_id=1744876572]
+position = Vector2(1472, 1375)
+
 [node name="AI_Dog_Path" type="Node2D" parent="." unique_id=257292608]
 
 [node name="Node2D" type="Node2D" parent="AI_Dog_Path" unique_id=185903470]
@@ -120050,3 +120112,17 @@ position = Vector2(424, 263)
 
 [node name="Node2D6" type="Node2D" parent="AI_Dog_Path" unique_id=1259555927]
 position = Vector2(424, -1)
+
+[node name="AI_Dog_Path2" type="Node2D" parent="." unique_id=1939476276]
+
+[node name="Node2D1" type="Node2D" parent="AI_Dog_Path2" unique_id=1117467861]
+position = Vector2(1272, 1383)
+
+[node name="Node2D2" type="Node2D" parent="AI_Dog_Path2" unique_id=967929960]
+position = Vector2(456, 1383)
+
+[node name="Node2D3" type="Node2D" parent="AI_Dog_Path2" unique_id=1138522816]
+position = Vector2(456, 1015)
+
+[node name="Node2D4" type="Node2D" parent="AI_Dog_Path2" unique_id=450558118]
+position = Vector2(24, 1015)

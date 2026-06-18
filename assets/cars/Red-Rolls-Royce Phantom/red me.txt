@@ -1,0 +1,44 @@
+===========================================================
+      FREE ISOMETRIC PIXEL ART CAR - RED LUXURY SEDAN
+===========================================================
+
+
+Thank you for downloading this free asset!
+ This car is designed 
+specifically for isometric games and is ready to be integrated 
+directly into your project.
+
+
+-----------------------------------------------------------
+
+1. WHAT'S INSIDE?
+-----------------------------------------------------------
+
+This folder contains one Red Luxury Sedan with the following:
+
+- 8 Directions: North (N), South (S), East (E), West (W), 
+
+  North-East (NE), North-West (NW), South-East (SE), South-West (SW).
+
+- 2 Animation States:
+  
+  * Idle: For stationary or parked states.
+  
+  * Move: For driving/movement states.
+
+
+-----------------------------------------------------------
+
+2. LICENSE (CC0)
+-----------------------------------------------------------
+- 
+You can use these assets in personal and commercial projects.
+
+- No attribution required (though it's highly appreciated!).
+
+- You may NOT resell or redistribute these files as standalone assets.
+
+
+Happy Game Developing!
+
+===========================================================

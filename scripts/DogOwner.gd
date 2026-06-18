@@ -17,8 +17,9 @@ var go_interval_max = 5
 var stop_interval = 0
 var waiting_for_response :bool = false
 var response_delay:float= 0
-var critical_response_delay = 4
+var critical_response_delay = 8
 var guide_dog:GuideDog
+var dog_position_offset:Vector2 = Vector2.ZERO
 
 @export var test:Sprite2D
 
@@ -83,9 +84,9 @@ func command_dog(repeat:bool = false):
 		command_dog(true)
 		print("critical response delayy")
 		print("making nervous")
-		make_nervous(4)
+		make_nervous(2)
 	else:
-		make_nervous(response_delay)
+		make_nervous(response_delay*0.5)
 		print("not waiting for respo")
 		waiting_for_response = false
 
@@ -109,8 +110,9 @@ func _ready() -> void:
 	for i in range(10):
 		nervouseness_levels.append(NervousenessLevel.new(self, 30+i*7))
 			
-func initialize(guidedog:GuideDog) -> void:
+func initialize(guidedog:GuideDog, dog_pos_offset) -> void:
 	guide_dog = guidedog
+	dog_position_offset = dog_pos_offset
 	guide_dog.on_started_moving.connect(on_dog_started_moving)
 	# Called every frame. 'delta' is the elapsed time since the previous frame.
 	
@@ -131,7 +133,7 @@ func _process(delta: float) -> void:
 				command_dog(false)
 			timer = 0
 		elif !guide_dog.respond_to_command(current_command):
-			make_nervous(4);
+			make_nervous(2);
 			command_dog(true)
 			print("DISOBEYED, REPEATING COMMAND GO")
 			timer = 0
@@ -141,12 +143,16 @@ func _process(delta: float) -> void:
 			command_dog(false)
 			timer = 0
 		elif !guide_dog.respond_to_command(current_command):
-			make_nervous(4);
+			make_nervous(2);
 			command_dog(true)
 			print("DISOBEYED, REPEATING COMMAND STOP")
 			timer = 0
 
-func on_dog_started_moving() -> void:
+func on_dog_started_moving(dog:GuideDog) -> void:
+	
+	if dog != guide_dog:
+		return
+		
 	can_follow = false
 
 	await get_tree().create_timer(.25).timeout
@@ -163,7 +169,7 @@ func check_obstacles():
 	var hitResult = {}
 	var to_dog = (guide_dog.global_position - global_position)
 	var perpendicular = to_dog.normalized().rotated(PI/2)
-	var offsets = [-7, 0, 7]
+	var offsets = [-10, 0, 10]
 	var temp = 0
 	var min_temp = 0
 	
@@ -200,14 +206,13 @@ func _physics_process(delta):
 	if !can_follow:	
 		idle()
 		return
-
 	var temp1 :Vector2 = find_random_target_offset()
 	if temp1 != Vector2.ZERO and guide_dog.move_direction != Vector2.ZERO:target_offset = temp1
 		
 	#check_obstacles()
 	#if guide_dog.velocity.length() > 0:move_direction = guide_dog.move_direction
 	move_speed = guide_dog.move_speed
-	
+		
 	print("to: ", target_offset)
 	var hitResult = {}
 	#line.clear_points()
@@ -246,15 +251,14 @@ func _physics_process(delta):
 		target_offset = saved_dog_pos - guide_dog.global_position
 
 	move_direction = (guide_dog.global_position + target_offset - global_position).normalized()
-	
-	if! guide_dog.is_ai:
-		can_move = (hitResult.is_empty() or check_obstacles()) and (guide_dog.global_position + target_offset-global_position).length() > 0.1 and (guide_dog.global_position-global_position).length() > Game_Manager.dog_position_offset.length()
-	else:
-		can_move = (hitResult.is_empty() or check_obstacles()) and (guide_dog.global_position + target_offset-global_position).length() > 0.1 and (guide_dog.global_position-global_position).length() > Game_Manager.ai_dog_position_offset.length()
+
+	can_move = (hitResult.is_empty() or check_obstacles()) and (guide_dog.global_position + target_offset-global_position).length() > 0.3 and (guide_dog.global_position-global_position).length() > dog_position_offset.length()
+
 	print("dist to target: ", (guide_dog.global_position + target_offset-global_position).length())
 	print("hitresult empty: ",hitResult.is_empty() , " avoiding obs ", avoiding_obstacles )
-	test.global_position = guide_dog.global_position + target_offset
+	#test.global_position = guide_dog.global_position + target_offset
 	
+	get_node("CollisionShape2D").disabled = check_obstacles()
 	#test.global_position = saved_dog_pos
 	
 	if !check_obstacles() and !avoiding_obstacles and guide_dog.movement_cache.size() > 0:
@@ -286,8 +290,8 @@ func _physics_process(delta):
 	if avoiding_obstacles and ((global_position-saved_dog_pos).length() < 0.3):
 		print("saved dog pos IS ", saved_dog_pos)
 		avoiding_obstacles = false
-
 		
+	#get_node("CollisionShape2D").disabled = avoiding_obstacles
 	print("CANMOVE: ", can_move, " target dist: ",(guide_dog.global_position + target_offset-global_position).length(), " env hit: ", !hitResult.is_empty() , " obs hit: ", check_obstacles())
 	if(check_obstacles() and !avoiding_obstacles) :
 	
@@ -301,7 +305,8 @@ func _physics_process(delta):
 			
 			saved_dog_positions.append(saved_dog_pos)
 			if saved_dog_pos != Vector2.ZERO:
-				saved_dog_pos += saved_wallnormal
+				#saved_dog_pos += saved_wallnormal
+				#saved_dog_pos += guide_dog.wall_normal*5
 				avoiding_obstacles = true
 				move_direction = (saved_dog_pos - global_position).normalized()
 				get_move_direction = true
@@ -310,20 +315,25 @@ func _physics_process(delta):
 		
 func find_random_target_offset():
 	
-	if guide_dog.move_direction != Vector2.UP and guide_dog.move_direction != Vector2.RIGHT and  guide_dog.move_direction != Vector2.LEFT and guide_dog.move_direction != Vector2.DOWN:
-		return Vector2.ZERO
-	
 	if guide_dog.is_near_wall:
 		return Vector2.ZERO
 		
-	var target = Vector2.ZERO
-	var targets = [guide_dog.global_position  -  guide_dog.move_direction*10 + guide_dog.move_direction.rotated(PI/2)*10,
-				guide_dog.global_position  -  guide_dog.move_direction*10 + guide_dog.move_direction.rotated(-PI/2)*10]
+	if is_ai:
+		print("gd md: ", guide_dog.move_direction)
+		
+	if abs(guide_dog.move_direction.angle_to(Vector2.UP))<0.1 or abs(guide_dog.move_direction.angle_to(Vector2.RIGHT))<0.1 or abs(guide_dog.move_direction.angle_to(Vector2.LEFT))<0.1 or abs(guide_dog.move_direction.angle_to(Vector2.DOWN))<0.1:
+
+		var target = Vector2.ZERO
+		var targets = [guide_dog.global_position  -  guide_dog.move_direction*10 + guide_dog.move_direction.rotated(PI/2)*10,
+					guide_dog.global_position  -  guide_dog.move_direction*10 + guide_dog.move_direction.rotated(-PI/2)*10]
+		
+		if ((global_position-targets[0]).length() > (global_position-targets[1]).length()):
+			target = targets[1]
+		else:
+			target = targets[0]
 	
-	if ((global_position-targets[0]).length() > (global_position-targets[1]).length()):
-		target = targets[1]
-	else:
-		target = targets[0]
+		if is_ai:
+			print("target offset: ", target - guide_dog.global_position)
+		return target - guide_dog.global_position
 	
-	print("target offset: ", target - guide_dog.global_position)
-	return target - guide_dog.global_position
+	return Vector2.ZERO

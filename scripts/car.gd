@@ -2,10 +2,15 @@ class_name Car
 extends CharacterBody2D
 
 @export var move_speed : float = 40
+@onready var sprite: Sprite2D = $Sprite2D
 var _car_path:Node2D
 var current_waypoint:int = 1
 var initialized:bool = false
 var checkpoint:Vector2 = Vector2.ZERO
+var move_direction:Vector2 = Vector2.ZERO
+var target_anim:String = ""
+var update_pose_interval:float = 0.25
+var timer:float = 0
 static var collided_car = null
 
 # Called when the node enters the scene tree for the first time.
@@ -16,6 +21,7 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
 	
+	timer += delta
 	if !initialized or _car_path == null:
 		return
 	
@@ -25,9 +31,13 @@ func _physics_process(delta: float) -> void:
 		
 	#Game_Manager._dog_owner.test.global_position = _car_path.get_child(current_waypoint).position
 	print("collided car: ", collided_car)
-	var direction = _car_path.get_child(current_waypoint).global_position - _car_path.get_child(current_waypoint-1).global_position
+	move_direction = (_car_path.get_child(current_waypoint).global_position - _car_path.get_child(current_waypoint-1).global_position).normalized()
+	if timer > update_pose_interval:
+		update_pose()
+		timer = 0
+		
 	if (_car_path.get_child(current_waypoint).global_position - global_position).length() > 2:
-		velocity = direction.normalized() * move_speed
+		velocity = move_direction* move_speed
 		var collision = move_and_collide(velocity*delta)
 		
 		if collision and collided_car == null:
@@ -45,6 +55,29 @@ func load_checkpoint():
 	global_position = checkpoint
 	await get_tree().create_timer(0.2).timeout
 
+func update_pose():
+	
+	var texture = null
+
+	if abs(move_direction.angle())< PI/8:
+		texture = load('res://assets/cars/Red-Rolls-Royce Phantom/Idle/move_e.png')
+	if abs(move_direction.angle_to(Vector2.from_angle(PI/4))) < PI/8:
+		texture = load('res://assets/cars/Red-Rolls-Royce Phantom/Idle/move_se.png')
+	if abs(move_direction.angle_to(Vector2.from_angle(PI/2)))< PI/8:
+		texture = load('res://assets/cars/Red-Rolls-Royce Phantom/Idle/move_s.png')
+	if abs(move_direction.angle_to(Vector2.from_angle(PI/2 + PI/4)))< PI/8:
+		texture = load('res://assets/cars/Red-Rolls-Royce Phantom/Idle/move_sw.png')
+	if abs(move_direction.angle_to(Vector2.from_angle(PI)))< PI/8:
+		texture = load('res://assets/cars/Red-Rolls-Royce Phantom/Idle/move_w.png')
+	if abs(move_direction.angle_to(Vector2.from_angle(PI + PI/4)))< PI/8:
+		texture = load('res://assets/cars/Red-Rolls-Royce Phantom/Idle/move_nw.png')
+	if abs(move_direction.angle_to(Vector2.from_angle(PI + PI/2)))< PI/8:
+		texture = load('res://assets/cars/Red-Rolls-Royce Phantom/Idle/move_n.png')
+	if abs(move_direction.angle_to(Vector2.from_angle(PI + PI/2 +PI/4)))< PI/8:
+		texture = load('res://assets/cars/Red-Rolls-Royce Phantom/Idle/move_ne.png')
+	
+	sprite.texture = texture
+	
 func saveCheckPoint():
 	while(!Game_Manager.game_lost() and !Game_Manager.game_won() and collided_car == null):
 		if Game_Manager._dog.velocity.length() <= 0:
