@@ -18,6 +18,12 @@
 [ext_resource type="Texture2D" uid="uid://b4uugys380hn3" path="res://icon.svg" id="15_jdm01"]
 [ext_resource type="Script" uid="uid://cfhn45a5lr640" path="res://scripts/UI_Manager.gd" id="16_ct7dq"]
 [ext_resource type="Script" uid="uid://b7sykwvkauqlp" path="res://scripts/nervoussness_progress_bar.gd" id="17_cmvai"]
+[ext_resource type="Texture2D" uid="uid://kk5vo86dfss8" path="res://assets/Command_sprites/Go_font_4.png" id="20_7a8bt"]
+[ext_resource type="Texture2D" uid="uid://dh0ndblvmvxwm" path="res://assets/Command_sprites/Go_font_3.png" id="21_tg6hx"]
+[ext_resource type="Texture2D" uid="uid://cy7ihjqvtf8ks" path="res://assets/Command_sprites/Go_font.png" id="22_hqqmv"]
+[ext_resource type="Texture2D" uid="uid://d2mduhat7bc0r" path="res://assets/Command_sprites/Go_font_2.png" id="23_6fvgh"]
+[ext_resource type="Texture2D" uid="uid://cjmt8rb73n6th" path="res://assets/Command_sprites/Go_font_7.png" id="23_tg6hx"]
+[ext_resource type="Texture2D" uid="uid://jy6difr5cla" path="res://assets/Command_sprites/Go_font_6.png" id="24_hqqmv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c76h7"]
 size = Vector2(128, 142)
@@ -119487,6 +119493,84 @@ size = Vector2(8.9401245, 8.00029)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k1ip8"]
 size = Vector2(8.596252, 11.038574)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_6fvgh"]
+atlas = ExtResource("22_hqqmv")
+region = Rect2(0, 0, 480, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nmqce"]
+atlas = ExtResource("23_6fvgh")
+region = Rect2(0, 0, 480, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k1ip8"]
+atlas = ExtResource("21_tg6hx")
+region = Rect2(0, 0, 480, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n6t2n"]
+atlas = ExtResource("20_7a8bt")
+region = Rect2(0, 0, 480, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_teom4"]
+atlas = ExtResource("23_tg6hx")
+region = Rect2(0, 0, 480, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_valxh"]
+atlas = ExtResource("20_7a8bt")
+region = Rect2(0, 0, 480, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b2mrm"]
+atlas = ExtResource("24_hqqmv")
+region = Rect2(0, 0, 480, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7a8bt"]
+atlas = ExtResource("23_tg6hx")
+region = Rect2(0, 0, 480, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tg6hx"]
+atlas = ExtResource("23_tg6hx")
+region = Rect2(0, 0, 480, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hqqmv"]
+atlas = ExtResource("23_tg6hx")
+region = Rect2(0, 0, 480, 360)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_b2mrm"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6fvgh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nmqce")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k1ip8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n6t2n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_teom4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_valxh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b2mrm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7a8bt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tg6hx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hqqmv")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f4wxj"]
 size = Vector2(25, 22)
 
@@ -120229,6 +120313,14 @@ wait_time = 300.0
 [node name="TimerLabel" type="Label" parent="CanvasLayer/UIManager" unique_id=1186256303]
 offset_right = 40.0
 offset_bottom = 23.0
+
+[node name="Animated_sprite" type="AnimatedSprite2D" parent="CanvasLayer/UIManager" unique_id=1750590989]
+position = Vector2(637, 312)
+scale = Vector2(0.13958332, 0.14722213)
+sprite_frames = SubResource("SpriteFrames_b2mrm")
+autoplay = "default"
+frame = 6
+frame_progress = 0.058129158
 
 [node name="park_colliders" type="StaticBody2D" parent="." unique_id=87918290]
 

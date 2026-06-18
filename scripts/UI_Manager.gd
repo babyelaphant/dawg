@@ -3,6 +3,7 @@ extends Node
 
 @onready var nv_progress_bar:NervousenessProgressBar = $Nervouseness_Meter
 @onready var command_label:Label= $Command_Label
+@onready var command_sprite:AnimatedSprite2D = $Animated_sprite
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -20,7 +21,12 @@ func show_command(command):
 	print("SHOW CMD")
 	command_label.visible = true
 	command_label.text = command
+	
+	command_sprite.visible = true
+	
 	await get_tree().create_timer(1).timeout
+	
+	command_sprite.visible = false
 	command_label.visible = false
 	
 	
