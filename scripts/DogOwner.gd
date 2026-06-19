@@ -17,9 +17,10 @@ var go_interval_max = 5
 var stop_interval = 0
 var waiting_for_response :bool = false
 var response_delay:float= 0
-var critical_response_delay = 8
+var critical_response_delay = 4
 var guide_dog:GuideDog
 var dog_position_offset:Vector2 = Vector2.ZERO
+var temp1:Vector2
 
 @export var test:Sprite2D
 
@@ -76,7 +77,7 @@ func command_dog(repeat:bool = false):
 	Game_Manager._ui.show_command(current_command)
 	response_delay = 0
 	waiting_for_response = true
-	while response_delay < critical_response_delay and !guide_dog.respond_to_command(current_command):
+	while !Game_Manager.gamelost and ! Game_Manager.gamewon and response_delay < critical_response_delay and !guide_dog.respond_to_command(current_command):
 		await get_tree().process_frame
 		response_delay += get_process_delta_time()
 
@@ -84,9 +85,9 @@ func command_dog(repeat:bool = false):
 		command_dog(true)
 		print("critical response delayy")
 		print("making nervous")
-		make_nervous(2)
+		make_nervous(4)
 	else:
-		make_nervous(response_delay*0.5)
+		make_nervous(response_delay)
 		print("not waiting for respo")
 		waiting_for_response = false
 
@@ -114,6 +115,7 @@ func initialize(guidedog:GuideDog, dog_pos_offset) -> void:
 	guide_dog = guidedog
 	dog_position_offset = dog_pos_offset
 	guide_dog.on_started_moving.connect(on_dog_started_moving)
+	guide_dog.on_move_direction_changed.connect(on_dog_changed_direction)
 	# Called every frame. 'delta' is the elapsed time since the previous frame.
 	
 func _process(delta: float) -> void:
@@ -148,34 +150,45 @@ func _process(delta: float) -> void:
 			print("DISOBEYED, REPEATING COMMAND STOP")
 			timer = 0
 
+func on_dog_changed_direction(dog:GuideDog) -> void:
+	if dog != guide_dog:
+		return
+	#can_follow = false
+#
+	#print("chdir")
+	#await get_tree().create_timer(.25).timeout
+	#temp1 = find_random_target_offset()
+	#
+	#can_follow = true
+
 func on_dog_started_moving(dog:GuideDog) -> void:
 	
 	if dog != guide_dog:
 		return
-		
+	
+	#temp1 = find_random_target_offset()
+	
 	can_follow = false
 
 	await get_tree().create_timer(.25).timeout
+	temp1 = find_random_target_offset()
 
 	can_follow = true
 	
-	if avoiding_obstacles:
-		return
-	var temp :Vector2 = find_random_target_offset()
-	if temp != Vector2.ZERO and guide_dog.move_direction != Vector2.ZERO:target_offset = temp
+	#if temp1 != Vector2.ZERO and guide_dog.move_direction != Vector2.ZERO:target_offset = temp1
 
 func check_obstacles():
 	
 	var hitResult = {}
 	var to_dog = (guide_dog.global_position - global_position)
 	var perpendicular = to_dog.normalized().rotated(PI/2)
-	var offsets = [-10, 0, 10]
+	var offsets = [-7, 0, 7]
 	var temp = 0
 	var min_temp = 0
 	
 	for i in range(3):
 		var offset = perpendicular * offsets[i]
-		var from = global_position-to_dog.normalized()*2 + offset
+		var from = global_position-to_dog.normalized() + offset
 		var to = guide_dog.global_position
 		
 		var query = PhysicsRayQueryParameters2D.create(from, to)
@@ -205,9 +218,21 @@ func check_obstacles():
 func _physics_process(delta):
 	if !can_follow:	
 		idle()
+		velocity = Vector2.ZERO
 		return
-	var temp1 :Vector2 = find_random_target_offset()
-	if temp1 != Vector2.ZERO and guide_dog.move_direction != Vector2.ZERO:target_offset = temp1
+		
+	print("=== FRAME START ===")
+	print("avoiding_obstacles: ", avoiding_obstacles)
+	print("saved_dog_pos: ", saved_dog_pos)
+	print("target_offset: ", target_offset)
+	print("move_direction BEFORE: ", move_direction)
+	print("can_pop: ", guide_dog.can_pop_movement_cache)
+	print("cache size: ", guide_dog.movement_cache.size())
+	print("is_building: ", guide_dog.is_building)
+	print("check_obstacles: ", check_obstacles())
+	
+	#var temp1 :Vector2 = find_random_target_offset()
+	#if temp1 != Vector2.ZERO and !avoiding_obstacles and guide_dog.move_direction != Vector2.ZERO:target_offset = temp1
 		
 	#check_obstacles()
 	#if guide_dog.velocity.length() > 0:move_direction = guide_dog.move_direction
@@ -217,7 +242,6 @@ func _physics_process(delta):
 	var hitResult = {}
 	#line.clear_points()
 	for i in range(3):
-		
 		var line  = get_node("Line2D" + str(i))
 		var space_state = get_world_2d().direct_space_state
 		var from = global_position - move_direction.rotated(PI/2)*3 + i * move_direction.rotated(PI/2) * 3
@@ -237,103 +261,115 @@ func _physics_process(delta):
 		if !result.is_empty() and hitResult.is_empty():
 			hitResult = result
 
-	if guide_dog.is_near_wall and !avoiding_obstacles:
+	test.global_position = guide_dog.global_position + target_offset
+	print("targetoffsetdist: ", (guide_dog.global_position + target_offset - guide_dog.global_position).length())
+	
+	#get_node("CollisionShape2D").disabled = check_obstacles()
+	#test.global_position = saved_dog_pos
+	#if avoiding_obstacles and ((global_position-saved_dog_pos).length() < 0.3):
+		#print("saved dog pos IS ", saved_dog_pos)
+		#avoiding_obstacles = false
+		
+	if avoiding_obstacles and ((global_position - saved_dog_pos).length() < 0.3) :
+		avoiding_obstacles = false
+		#saved_dog_pos = Vector2.ZERO
+		get_move_direction = false
+	
+	print("avoiding obs: ", avoiding_obstacles)
+	#get_node("CollisionShape2D").disabled = avoiding_obstacles
+	print("CANMOVE: ", can_move, " target dist: ",(guide_dog.global_position + target_offset-global_position).length(), " env hit: ", !hitResult.is_empty() , " obs hit: ", check_obstacles())
+	#if(check_obstacles() and !avoiding_obstacles) :
+	#if(check_obstacles()) :
+	
+	if check_obstacles() and !avoiding_obstacles:
+		if !guide_dog.is_building:
+			guide_dog.movement_cache.clear()  # force fresh cache
+			guide_dog.build_movement_cache()
+
+	if !avoiding_obstacles and guide_dog.can_pop_movement_cache:
+		saved_dog_pos = guide_dog.pop_movement_cache()
+		print("sv dogpos",saved_dog_pos )
+		if saved_dog_pos != Vector2.ZERO:
+			print("popping from cache")
+			#test.global_position = saved_dog_pos
+			#target_offset = saved_dog_pos - guide_dog.global_position
+			avoiding_obstacles = true
+			get_move_direction = true
+			#dog_position_offset = saved_dog_pos - guide_dog.global_position
+
+	if !check_obstacles() and guide_dog.can_pop_movement_cache:
+		guide_dog.can_pop_movement_cache = false
+		#await get_tree().create_timer(0.2).timeout
+		print("clear cache")
+		guide_dog.movement_cache.clear()
+		guide_dog.is_building = false
+		avoiding_obstacles = false
+		
+	if avoiding_obstacles:
+		target_offset = saved_dog_pos - guide_dog.global_position
+		
+	elif !avoiding_obstacles and guide_dog.is_near_wall:
 		var temp = guide_dog.global_position - guide_dog.move_direction* 10
 		if abs(guide_dog.move_direction.angle_to(guide_dog.wall_normal)) >= PI/2:
-			print("kalender")
 			temp += guide_dog.wall_normal * 10
 			
 		if guide_dog.move_direction != Vector2.ZERO:
 			target_offset = temp
 			target_offset = target_offset - guide_dog.global_position
+
+	elif !avoiding_obstacles:
+		if temp1 != Vector2.ZERO:
+			target_offset = temp1
 	
-	if avoiding_obstacles:
-		target_offset = saved_dog_pos - guide_dog.global_position
-
-	move_direction = (guide_dog.global_position + target_offset - global_position).normalized()
-
-	can_move = (hitResult.is_empty() or check_obstacles()) and (guide_dog.global_position + target_offset-global_position).length() > 0.3 and (guide_dog.global_position-global_position).length() > dog_position_offset.length()
-
+	if target_offset == Vector2.ZERO:
+		print("to is 0")
+			
+	move_direction = (guide_dog.global_position+target_offset-global_position).normalized()
 	print("dist to target: ", (guide_dog.global_position + target_offset-global_position).length())
-	print("hitresult empty: ",hitResult.is_empty() , " avoiding obs ", avoiding_obstacles )
-	#test.global_position = guide_dog.global_position + target_offset
+	print("hitresult empty: ",hitResult.is_empty() , " avoiding obs ", avoiding_obstacles )		
 	
-	get_node("CollisionShape2D").disabled = check_obstacles()
-	#test.global_position = saved_dog_pos
-	
-	if !check_obstacles() and !avoiding_obstacles and guide_dog.movement_cache.size() > 0:
-		print("reset cache")
-		guide_dog.movement_cache.clear()
-		guide_dog.is_building=false
-		saved_dog_positions.clear()
-	
-	if guide_dog.is_near_wall:
-		saved_wallnormal = guide_dog.wall_normal*5
+	#can_move = (guide_dog.global_position-global_position).length() > dog_position_offset.length()
+	can_move = (guide_dog.global_position + target_offset-global_position).length() > 0.3 #and (guide_dog.global_position-global_position).length() > dog_position_offset.length()
 
 	if can_move:	
 		print("can move!")
-		if guide_dog.movement_cache.size() == 0:
-			print("cache size = 0")
-			move_direction = (guide_dog.global_position + target_offset - global_position).normalized()
-		get_move_direction = false
 		velocity = move_direction.normalized() * move_speed
-		#guide_dog.movement_cache = []
 		move()
 	else:
 		print("cant move")
-		guide_dog.reset_movement_cache()
+		velocity = Vector2.ZERO
+		#guide_dog.movement_cache.clear()
+		#guide_dog.is_building = false
+		#guide_dog.can_pop_movement_cache = false
 		idle()
 	
 	if velocity.length() < 0.1:
 		saved_dog_pos = Vector2.ZERO
-	
-	if avoiding_obstacles and ((global_position-saved_dog_pos).length() < 0.3):
-		print("saved dog pos IS ", saved_dog_pos)
-		avoiding_obstacles = false
 		
-	#get_node("CollisionShape2D").disabled = avoiding_obstacles
-	print("CANMOVE: ", can_move, " target dist: ",(guide_dog.global_position + target_offset-global_position).length(), " env hit: ", !hitResult.is_empty() , " obs hit: ", check_obstacles())
-	if(check_obstacles() and !avoiding_obstacles) :
-	
-		if(guide_dog.movement_cache.is_empty() and !guide_dog.is_building ):
-			print("building movement cache")
-			guide_dog.build_movement_cache()
-		
-		if !get_move_direction :
-			saved_dog_pos = guide_dog.pop_movement_cache()
-			print("sv dogpos",saved_dog_pos )
-			
-			saved_dog_positions.append(saved_dog_pos)
-			if saved_dog_pos != Vector2.ZERO:
-				#saved_dog_pos += saved_wallnormal
-				#saved_dog_pos += guide_dog.wall_normal*5
-				avoiding_obstacles = true
-				move_direction = (saved_dog_pos - global_position).normalized()
-				get_move_direction = true
-				
+	print("CAN MOVE: ", can_move)
 	super._physics_process(delta)
 		
 func find_random_target_offset():
 	
 	if guide_dog.is_near_wall:
 		return Vector2.ZERO
-		
-	if is_ai:
-		print("gd md: ", guide_dog.move_direction)
-		
-	if abs(guide_dog.move_direction.angle_to(Vector2.UP))<0.1 or abs(guide_dog.move_direction.angle_to(Vector2.RIGHT))<0.1 or abs(guide_dog.move_direction.angle_to(Vector2.LEFT))<0.1 or abs(guide_dog.move_direction.angle_to(Vector2.DOWN))<0.1:
+			
+	#if abs(guide_dog.move_direction.angle_to(Vector2.UP))<0.1 or abs(guide_dog.move_direction.angle_to(Vector2.RIGHT))<0.1 or abs(guide_dog.move_direction.angle_to(Vector2.LEFT))<0.1 or abs(guide_dog.move_direction.angle_to(Vector2.DOWN))<0.1:
+	if guide_dog.move_direction != Vector2.UP and guide_dog.move_direction != Vector2.RIGHT and guide_dog.move_direction != Vector2.LEFT and guide_dog.move_direction != Vector2.DOWN:
+		print("guide dog movedir: ", guide_dog.move_direction)
+		return Vector2.ZERO
 
-		var target = Vector2.ZERO
-		var targets = [guide_dog.global_position  -  guide_dog.move_direction*10 + guide_dog.move_direction.rotated(PI/2)*10,
-					guide_dog.global_position  -  guide_dog.move_direction*10 + guide_dog.move_direction.rotated(-PI/2)*10]
-		
-		if ((global_position-targets[0]).length() > (global_position-targets[1]).length()):
-			target = targets[1]
-		else:
-			target = targets[0]
+	var target = Vector2.ZERO
+	var targets = [guide_dog.global_position  -  guide_dog.move_direction*10 + guide_dog.move_direction.rotated(PI/2)*10,
+				guide_dog.global_position  -  guide_dog.move_direction*10 + guide_dog.move_direction.rotated(-PI/2)*10]
 	
-		if is_ai:
-			print("target offset: ", target - guide_dog.global_position)
-		return target - guide_dog.global_position
+	if ((global_position-targets[0]).length() > (global_position-targets[1]).length()):
+		target = targets[1]
+	else:
+		target = targets[0]
+
+	#if is_ai:
+		#print("target offset: ", target - guide_dog.global_position)
+	return target - guide_dog.global_position
 	
 	return Vector2.ZERO

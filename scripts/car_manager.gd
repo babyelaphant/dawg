@@ -12,7 +12,7 @@ func _process(delta: float) -> void:
 	
 	timer += delta	
 	if timer > spawn_interval:
-		spawn_interval = randi_range(2,4)
+		spawn_interval = randf_range(1,2)
 		spawn_car()
 		timer = 0
 

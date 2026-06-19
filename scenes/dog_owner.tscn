@@ -513,6 +513,9 @@ animations = [{
 "speed": 8.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nioo4"]
+size = Vector2(8.9401245, 8.00029)
+
 [node name="Dog Owner" type="CharacterBody2D" unique_id=101522349]
 process_mode = 1
 z_index = 1
@@ -527,3 +530,7 @@ animation = &"walk_w"
 frame_progress = 0.17786928
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1254608233]
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=1652006751]
+position = Vector2(0.78897095, 5.000122)
+shape = SubResource("RectangleShape2D_nioo4")

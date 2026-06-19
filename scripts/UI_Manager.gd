@@ -15,7 +15,7 @@ func _ready() -> void:
 He brings you to places that you otherwise could never dream of being.\n
 But Buddy urgently needs some food.\n
 He hasn't eaten anything since morning.\n
-First find a food source in the vicinity."
+First find a food source in the neighbourhood."
 
 	info_texts["eaten food"] = "Mmmmh. That tasted good.\nNow Buddy has enough energy to continue!
 								\nNext Objective: Find a park bench to relax."
@@ -24,15 +24,24 @@ First find a food source in the vicinity."
 	info_texts["game won"] = "Finally! Buddy reached his destination and his dog owner is relieved.
 							  You completed the game in " + str(300-$Timer.time_left) + " seconds!"
 	
-	info_texts["game lost"] = "You lost the game. Tommy needs to train his dog better next time..."
+	info_texts["game lost(missing objective)"] = "You found a park bench but you could not locate a food source for Budy. Tommy needs to train his dog better next time..."
 	
+	info_texts["game lost(no attempts)"] = "You have no attempts remaining. Tommy needs to train his dog better next time..."
+		
+	info_texts["game lost(timeout)"] = "Oops. Your time has run out! Tommy needs to train his dog better next time..."
+
 func update_info(info:String):
 	current_info = info
+	if Game_Manager.gamelost:
+		continue_btn.queue_free()
 	pause_game(true)
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	$TimerLabel.text =  str(ceil($Timer.time_left))
+	if timeout():
+		Game_Manager.gamelost = true
+		update_info("game lost(timeout)")
 	
 func reset_timer(value:float):
 	$Timer.wait_time = value
@@ -65,5 +74,7 @@ func show_command(command):
 	command_label.visible = false
 	
 func continue_btn_pressed():
-	pause_game(false)
-	$Timer.start()
+	if !Game_Manager.gamewon and !Game_Manager.gamelost:
+		pause_game(false)
+	if current_info == "info_start":
+		$Timer.start()

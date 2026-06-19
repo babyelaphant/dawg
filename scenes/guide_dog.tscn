@@ -14,6 +14,9 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ks2uj"]
+size = Vector2(8.9401245, 8.00029)
+
 [node name="GuideDog" type="CharacterBody2D" unique_id=1338871032]
 process_mode = 1
 z_index = 1
@@ -25,3 +28,19 @@ scale = Vector2(0.05, 0.05)
 sprite_frames = SubResource("SpriteFrames_o6xl0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1393575306]
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=679374184]
+position = Vector2(0.78897095, 5.000122)
+shape = SubResource("RectangleShape2D_ks2uj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionShape2D2" unique_id=659492220]
+position = Vector2(0.78897095, 5.000122)
+shape = SubResource("RectangleShape2D_ks2uj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionShape2D2/CollisionShape2D" unique_id=52328293]
+position = Vector2(0.78897095, 5.000122)
+shape = SubResource("RectangleShape2D_ks2uj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionShape2D2/CollisionShape2D/CollisionShape2D" unique_id=1344850925]
+position = Vector2(0.78897095, 5.000122)
+shape = SubResource("RectangleShape2D_ks2uj")

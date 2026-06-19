@@ -10,6 +10,7 @@ process_mode = 1
 z_index = 11
 scale = Vector2(0.1, 0.1)
 script = ExtResource("1_gtsar")
+move_speed = 160.0
 metadata/_custom_type_script = "uid://bxn2jsw87j3co"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=364588312]

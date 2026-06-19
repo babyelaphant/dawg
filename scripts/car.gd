@@ -16,7 +16,7 @@ static var collided_car = null
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	print("car ready")
-	Game_Manager.load_checkpoints.connect(load_checkpoint)
+	#Game_Manager.load_checkpoints.connect(load_checkpoint)
 	saveCheckPoint()
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
@@ -36,18 +36,23 @@ func _physics_process(delta: float) -> void:
 		update_pose()
 		timer = 0
 		
+	var collision = move_and_collide(velocity*delta)
+		
+	if collision and collided_car == null:
+		if not collision.get_collider() is DogDowner and not collision.get_collider() is GuideDog : 
+			print("what?")
+			return
+		collided_car = self
+		#.get_collider().get_node("CollisionShape2D").disabled = true
+		Game_Manager.new_attempt()
+		if !Game_Manager.gamelost:
+			global_position = Vector2.ZERO
+	
 	if (_car_path.get_child(current_waypoint).global_position - global_position).length() > 2:
 		velocity = move_direction* move_speed
-		var collision = move_and_collide(velocity*delta)
-		
-		if collision and collided_car == null:
-			if not collision.get_collider() is DogDowner and not collision.get_collider() is GuideDog : 
-				return
-			collided_car = self
-			collision.get_collider().get_node("CollisionShape2D").disabled = true
-			Game_Manager.new_attempt()
 
 	elif current_waypoint < _car_path.get_children().size():
+		velocity = Vector2.ZERO
 		current_waypoint += 1
 		print("current wp: ", current_waypoint)
 
@@ -79,7 +84,7 @@ func update_pose():
 	sprite.texture = texture
 	
 func saveCheckPoint():
-	while(!Game_Manager.game_lost() and !Game_Manager.game_won() and collided_car == null):
+	while(!Game_Manager.gamelost and !Game_Manager.gamewon and collided_car == null):
 		if Game_Manager._dog.velocity.length() <= 0:
 			checkpoint = global_position
 		await get_tree().process_frame
