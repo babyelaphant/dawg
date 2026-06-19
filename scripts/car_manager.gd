@@ -1,18 +1,21 @@
 class_name Car_Manager
 extends Node
 
-var spawn_interval = 2
+@export var spawn_interval_min = 1.0
+@export var spawn_interval_max = 2.0
+var spawn_interval = 0
 var timer = 0
 @onready var car_path: Node2D = $CarPath
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	randomize()
+	spawn_interval = randf_range(spawn_interval_min,spawn_interval_max)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	
 	timer += delta	
 	if timer > spawn_interval:
-		spawn_interval = randf_range(1,2)
+		spawn_interval = randf_range(spawn_interval_min,spawn_interval_max)
 		spawn_car()
 		timer = 0
 

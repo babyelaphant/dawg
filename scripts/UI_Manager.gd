@@ -18,7 +18,7 @@ He hasn't eaten anything since morning.\n
 First find a food source in the neighbourhood."
 
 	info_texts["eaten food"] = "Mmmmh. That tasted good.\nNow Buddy has enough energy to continue!
-								\nNext Objective: Find a park bench to relax."
+								\nNext Objective: Now go find a cozy place to relax."
 	info_texts["New Attempt"] = "You collided with a car and died.\nRestarting from last checkpoint!"
 	
 	info_texts["game won"] = "Finally! Buddy reached his destination and his dog owner is relieved.
@@ -26,14 +26,17 @@ First find a food source in the neighbourhood."
 	
 	info_texts["game lost(missing objective)"] = "You found a park bench but you could not locate a food source for Budy. Tommy needs to train his dog better next time..."
 	
-	info_texts["game lost(no attempts)"] = "You have no attempts remaining. Tommy needs to train his dog better next time..."
+	info_texts["game lost(no attempts)"] = "Game Over. You have no attempts remaining. Tommy needs to train his dog better next time..."
 		
-	info_texts["game lost(timeout)"] = "Oops. Your time has run out! Tommy needs to train his dog better next time..."
+	info_texts["game lost(timeout)"] = "Game Over. Your time has run out! Tommy needs to train his dog better next time..."
+
+	info_texts["game lost(nervous)"] = "Game Over. Your owner got too nervous! Tommy needs to train his dog better next time..."
 
 func update_info(info:String):
 	current_info = info
 	if Game_Manager.gamelost:
-		continue_btn.queue_free()
+		if continue_btn:
+			continue_btn.queue_free()
 	pause_game(true)
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.

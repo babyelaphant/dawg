@@ -71,10 +71,10 @@ func _process(delta: float) -> void:
 	if (npc_spawn1.global_position - _dog.global_position).length() < 150 \
 		and _ai_dogs["AI_GuideDog"].move_direction == Vector2.ZERO:
 			trigger_ai_dog("AI_GuideDog")
-	
-	if (npc_spawn2.global_position - _dog.global_position).length() < 150 \
-		and _ai_dogs["AI_GuideDog2"].move_direction == Vector2.ZERO:
-			trigger_ai_dog("AI_GuideDog2")
+	#
+	#if (npc_spawn2.global_position - _dog.global_position).length() < 150 \
+		#and _ai_dogs["AI_GuideDog2"].move_direction == Vector2.ZERO:
+			#trigger_ai_dog("AI_GuideDog2")
 			
 func recalculate_dog_position_offset():
 	dog_position_offset =  _dog_owner.global_position -_dog.global_position
@@ -102,8 +102,8 @@ func initialize_game():
 	_ai_dogs["AI_GuideDog2"].initialize(_ai_dog_owners["AI_Dog_Owner2"])
 	_ui.start_game()
 	initialized = true
-	objectives["find_food"] = false
-	objectives["find_bench"] = false
+	objectives["find food"] = false
+	objectives["find bench"] = false
 	npc_spawn1 = get_tree().current_scene.get_node("Npc_Spawn")
 	npc_spawn2 = get_tree().current_scene.get_node("Npc_Spawn2")
 	park_bench = get_tree().current_scene.get_node("ParkBench")
@@ -114,12 +114,14 @@ func initialize_game():
 	park_bench2.get_node("Area2D").body_entered.connect(reached_park_bench)
 	print(park_bench2.get_node("Area2D").body_entered.get_connections())
 	checkpoint = get_tree().current_scene.get_node("CheckPoint")
+	#await get_tree().create_timer(randi_range(3,5)).timeout
+	trigger_ai_dog("AI_GuideDog2")
 	#saveCheckPoints()
 	
 func reached_park_bench(body):
 	print("reached bench")
 	objective_completed("find bench")
-	if objective_completed("find food"):
+	if is_objective_completed("find food"):
 		_ui.update_info("game won")
 		gamewon = true
 	else:

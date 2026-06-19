@@ -1,22 +1,26 @@
 [gd_scene format=3 uid="uid://by8vw65pfuwnk"]
 
 [ext_resource type="Script" uid="uid://bxn2jsw87j3co" path="res://scripts/car.gd" id="1_gtsar"]
+[ext_resource type="Texture2D" uid="uid://dmytfcxcxnn5a" path="res://assets/cars/Red-Rolls-Royce Phantom/Idle/move_e.png" id="2_gtsar"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jtldb"]
-size = Vector2(128, 128)
+size = Vector2(128, 80)
 
 [node name="Car" type="CharacterBody2D" unique_id=822446399]
 process_mode = 1
 z_index = 11
 scale = Vector2(0.1, 0.1)
 script = ExtResource("1_gtsar")
-move_speed = 160.0
+move_speed = 120.0
 metadata/_custom_type_script = "uid://bxn2jsw87j3co"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=364588312]
+position = Vector2(0, -9.999996)
+scale = Vector2(0.9999998, 0.9999998)
 shape = SubResource("RectangleShape2D_jtldb")
 
 [node name="Poses" type="Node2D" parent="." unique_id=958822360]
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1493280490]
 scale = Vector2(0.9999998, 0.9999998)
+texture = ExtResource("2_gtsar")
