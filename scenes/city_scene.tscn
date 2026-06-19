@@ -119746,6 +119746,7 @@ position = Vector2(0.88742065, -0.053955078)
 zoom = Vector2(2.53, 2.53)
 
 [node name="Line2D0" type="Line2D" parent="Dog Owner" unique_id=707706796]
+visible = false
 z_as_relative = false
 points = PackedVector2Array(-24, 5)
 default_color = Color(0.38039216, 1, 0.21960784, 1)
@@ -119756,6 +119757,7 @@ points = PackedVector2Array(-24, 5)
 default_color = Color(0.38039216, 1, 0.21960784, 1)
 
 [node name="Line2D2" type="Line2D" parent="Dog Owner" unique_id=630856999]
+visible = false
 z_as_relative = false
 points = PackedVector2Array(-24, 5)
 default_color = Color(0.38039216, 1, 0.21960784, 1)
@@ -119776,6 +119778,7 @@ slide_on_ceiling = false
 script = ExtResource("13_picbe")
 distractionsources = NodePath("../DistractionSources")
 test = NodePath("../Test")
+move_speed = 30.0
 _animations = Array[String](["walk_n", "walk_ne", "walk_e", "walk_se", "walk_s", "walk_sw", "walk_w", "walk_nw"])
 
 [node name="AnimatedSprite" type="AnimatedSprite2D" parent="GuideDog" unique_id=854925771]
@@ -119870,6 +119873,7 @@ script = ExtResource("13_picbe")
 distractionsources = NodePath("../DistractionSources")
 test = NodePath("../Test")
 ai_path = NodePath("../AI_Dog_Path")
+move_speed = 30.0
 is_ai = true
 _animations = Array[String](["walk_n", "walk_ne", "walk_e", "walk_se", "walk_s", "walk_sw", "walk_w", "walk_nw"])
 
@@ -119951,6 +119955,7 @@ script = ExtResource("13_picbe")
 distractionsources = NodePath("../DistractionSources")
 test = NodePath("../Test")
 ai_path = NodePath("../AI_Dog_Path2")
+move_speed = 30.0
 is_ai = true
 _animations = Array[String](["walk_n", "walk_ne", "walk_e", "walk_se", "walk_s", "walk_sw", "walk_w", "walk_nw"])
 
