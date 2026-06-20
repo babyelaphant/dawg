@@ -8,9 +8,13 @@ var dog_barks = {}
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass
+
+func _on_music_finished():
+	ingame_music.play()
 	
 func initialize():
 	ingame_music = get_tree().current_scene.get_node("ingame_music")
+	ingame_music.finished.connect(_on_music_finished)
 	ingame_music.play()
 	
 func register_dog_bark(dog:GuideDog, bark:AudioStreamPlayer2D):
