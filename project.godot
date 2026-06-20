@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="dawgGame"
-run/main_scene="uid://bu6ro0oevdy10"
+run/main_scene="uid://cq73k81hh5s7k"
 config/features=PackedStringArray("4.6", "Forward Plus")
 boot_splash/bg_color=Color(0, 0, 0, 1)
 config/icon="res://icon.svg"

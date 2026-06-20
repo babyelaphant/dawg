@@ -18,6 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://br05b4mgeos0n" path="res://assets/progressbar/nervosuness_progress.png" id="16_fghhq"]
 [ext_resource type="Script" uid="uid://b7sykwvkauqlp" path="res://scripts/nervoussness_progress_bar.gd" id="17_cmvai"]
 [ext_resource type="Texture2D" uid="uid://dvinlgqjkw4k8" path="res://assets/dog food/dogfood.png" id="18_cmvai"]
+[ext_resource type="FontFile" uid="uid://vtsdx1rb101t" path="res://assets/PeaberryBase.ttf" id="18_en8l0"]
 [ext_resource type="PackedScene" uid="uid://q4grnsjo81v6" path="res://scenes/guide_dog.tscn" id="19_cb3sn"]
 [ext_resource type="Script" uid="uid://cb2m1vbgtsfhj" path="res://scripts/car_manager.gd" id="19_fghhq"]
 [ext_resource type="AudioStream" uid="uid://blmxlyygbrfxu" path="res://assets/music/gamejam-doggame.mp3" id="21_x8v0e"]
@@ -119905,9 +119906,10 @@ metadata/_custom_type_script = "uid://cfhn45a5lr640"
 
 [node name="Nervouseness_Meter" type="TextureProgressBar" parent="CanvasLayer/UIManager" unique_id=317534875]
 custom_minimum_size = Vector2(150, 0)
-offset_left = 136.0
-offset_right = 936.0
-offset_bottom = 50.0
+offset_left = 475.0
+offset_top = 575.0
+offset_right = 1275.0
+offset_bottom = 625.0
 texture_progress = ExtResource("16_fghhq")
 script = ExtResource("17_cmvai")
 metadata/_custom_type_script = "uid://b7sykwvkauqlp"
@@ -119915,11 +119917,15 @@ metadata/_custom_type_script = "uid://b7sykwvkauqlp"
 [node name="NervousenessLabel" type="Label" parent="CanvasLayer/UIManager/Nervouseness_Meter" unique_id=2126741538]
 layout_mode = 0
 offset_left = 32.0
-offset_top = 3.0
-offset_right = 114.0
-offset_bottom = 20.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 12
+offset_top = 25.0
+offset_right = 203.0
+offset_bottom = 49.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_constants/shadow_outline_size = 5
+theme_override_fonts/font = ExtResource("18_en8l0")
+theme_override_font_sizes/font_size = 24
 text = "Nervouseness"
 
 [node name="Command_Label" type="Label" parent="CanvasLayer/UIManager" unique_id=1116761721]
@@ -119928,6 +119934,12 @@ offset_left = 568.0
 offset_right = 608.0
 offset_bottom = 23.0
 theme_override_colors/font_color = Color(1, 0.3223057, 0.27457172, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_constants/shadow_outline_size = 5
+theme_override_fonts/font = ExtResource("18_en8l0")
+theme_override_font_sizes/font_size = 25
 
 [node name="Timer" type="Timer" parent="CanvasLayer/UIManager" unique_id=1828500020]
 wait_time = 280.0
@@ -119936,6 +119948,7 @@ wait_time = 280.0
 offset_right = 40.0
 offset_bottom = 23.0
 theme_override_colors/font_color = Color(0.00011382803, 0.00011382803, 0.00011382803, 1)
+theme_override_fonts/font = ExtResource("18_en8l0")
 theme_override_font_sizes/font_size = 12
 text = "Time Left:"
 
