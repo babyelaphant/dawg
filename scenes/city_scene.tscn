@@ -119995,6 +119995,8 @@ texture = ExtResource("18_cmvai")
 
 [node name="Car_Manager" type="Node2D" parent="." unique_id=1071715197]
 script = ExtResource("19_fghhq")
+spawn_interval_min = 1.5
+spawn_interval_max = 3.0
 
 [node name="CarPath" type="Node2D" parent="Car_Manager" unique_id=1090216674]
 
@@ -120153,8 +120155,15 @@ position = Vector2(280.00003, 1351)
 scale = Vector2(10, 10)
 distractionsources = NodePath("../DistractionSources")
 test = NodePath("../Test")
+max_distance = 40.0
 move_speed = 30.0
-_animations = Array[String](["idle_s", "walk_n", "walk_ne", "walk_nw", "walk_e", "walk_se", "walk_s", "walk_sw", "walk_w"])
+_animations = Array[String](["idle_s", "walk_n", "walk_ne", "walk_nw", "walk_e", "walk_se", "walk_s", "walk_sw", "walk_w", "idle_e", "idle_n", "idle_w"])
+
+[node name="AnimatedSprite" parent="GuideDog" index="0" unique_id=1070021760]
+frame_progress = 0.40419737
+
+[node name="Sprite2D" parent="GuideDog/CollisionShape2D" parent_id_path=PackedInt32Array(1338871032, 1393575306) index="0" unique_id=203978588]
+position = Vector2(-14.518186, 27.401588)
 
 [node name="AI_GuideDog" parent="." unique_id=936849769 node_paths=PackedStringArray("distractionsources", "test", "ai_path") instance=ExtResource("19_cb3sn")]
 position = Vector2(800, 31)
@@ -120166,8 +120175,12 @@ move_speed = 30.0
 is_ai = true
 _animations = Array[String](["idle_s", "walk_n", "walk_ne", "walk_nw", "walk_e", "walk_se", "walk_s", "walk_sw", "walk_w"])
 
+[node name="AnimatedSprite" parent="AI_GuideDog" index="0" unique_id=1070021760]
+animation = &"idle_n"
+frame_progress = 0.8926363
+
 [node name="AI_GuideDog2" parent="." unique_id=136203392 node_paths=PackedStringArray("distractionsources", "test", "ai_path") instance=ExtResource("19_cb3sn")]
-position = Vector2(1456, 1383)
+position = Vector2(1475, 1490)
 scale = Vector2(10, 10)
 distractionsources = NodePath("../DistractionSources")
 test = NodePath("../Test")
@@ -120236,7 +120249,7 @@ position = Vector2(696, 1151)
 position = Vector2(12, -12)
 shape = SubResource("RectangleShape2D_hlfpy")
 
-[node name="House2" type="Node2D" parent="." unique_id=560065796]
+[node name="House2" type="StaticBody2D" parent="." unique_id=131479277]
 position = Vector2(1240, 1087)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="House2" unique_id=1922494526]
@@ -120470,4 +120483,5 @@ shape = SubResource("RectangleShape2D_f4wxj")
 position = Vector2(1078, 34.25)
 shape = SubResource("RectangleShape2D_1813r")
 
+[editable path="GuideDog"]
 [editable path="AI_GuideDog"]

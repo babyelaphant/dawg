@@ -41,7 +41,30 @@ func register_dog(d:GuideDog) ->void:
 
 func register_ui(ui:UIManager):
 	_ui = ui
-	
+
+func new_highscore(score:float) ->bool:
+	if not FileAccess.file_exists("user://save_game.dat"):
+		var file = FileAccess.open("user://save_game.dat", FileAccess.WRITE)
+		file.close()
+
+	var savefile = FileAccess.open("user://save_game.dat", FileAccess.READ_WRITE)
+	var content = savefile.get_as_text()
+	var result = false
+	if savefile:
+		savefile.seek_end()
+		if content == "":
+			result=true
+			savefile.store_string(str(snappedf(score, 0.1)))
+		else:
+			for line in content.split("\n"):
+				if int(line) > score:
+					result = true
+					savefile.store_string(str(score))
+					break
+					
+		savefile.close()
+	return result
+
 func register_dog_owner(do:DogDowner) ->void:
 	
 	if !do.is_ai:
@@ -139,8 +162,8 @@ func reached_park_bench(body):
 	print("reached bench")
 	objective_completed("find bench")
 	if is_objective_completed("find food") and is_objective_completed("find water"):
-		_ui.update_info("game won")
 		gamewon = true
+		_ui.update_info("game won")
 	else:
 		gamelost = true
 		_ui.update_info("game lost(missing objective)")
@@ -155,7 +178,7 @@ func place_dog_food():
 	query.collide_with_bodies = true
 	var result = space_state.intersect_point(query)
 	
-	while (!result.is_empty() and  can_place_dog_food(v,result)) or (v-_dog.global_position).length() < 200:
+	while (!result.is_empty() and !can_place_dog_food(v,result)) or (v-_dog.global_position).length() < 200:
 		posx = randi_range(13,392)
 		posy = randi_range(1095,1350)
 		v = Vector2(posx,posy)
@@ -183,7 +206,7 @@ func new_attempt():
 		print("NEW ATTEMPTI")
 		_ui.update_info("New Attempt")
 		start_from_last_checkpoint()
-		Car.collided_car = null
+		#Car.collided_car = null
 	else:
 		gamelost = true
 		_ui.update_info("game lost(no attempts)")

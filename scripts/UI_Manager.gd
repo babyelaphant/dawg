@@ -29,11 +29,11 @@ First find a food source in the neighbourhood."
 				
 	info_texts["game lost(missing objective)"] = "You found a park bench but you could not locate a food source for Budy. Tommy needs to train his dog better next time..."
 	
-	info_texts["game lost(no attempts)"] = "Game Over. You have no attempts remaining. Tommy needs to train his dog better next time..."
+	info_texts["game lost(no attempts)"] = "Game Over. You have no attempts remaining.\nTommy needs to train his dog better next time..."
 		
-	info_texts["game lost(timeout)"] = "Game Over. Your time has run out! Tommy needs to train his dog better next time..."
+	info_texts["game lost(timeout)"] = "Game Over. Your time has run out!\nTommy needs to train his dog better next time..."
 
-	info_texts["game lost(nervous)"] = "Game Over. Your owner got too nervous! Tommy needs to train his dog better next time..."
+	info_texts["game lost(nervous)"] = "Game Over. Your owner got too nervous!\nTommy needs to train his dog better next time..."
 
 	info_texts["other bench"] = "I could sit here, but this is not a cozy place..."
 	
@@ -43,7 +43,10 @@ func update_info(info:String):
 		if continue_btn:
 			continue_btn.queue_free()
 		if Game_Manager.gamewon:
-			info_texts["game won"] += "You completed the game in " + str(300-$Timer.time_left) + " seconds!"
+			var score = snappedf(300-$Timer.time_left, 0.1)
+			info_texts["game won"] += "\nYou completed the game in " + str(score) + " seconds!"
+			if Game_Manager.new_highscore(score):
+				info_texts["game won"] += "\nThis is your new Highscore!"
 	pause_game(true)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -88,3 +91,5 @@ func continue_btn_pressed():
 		pause_game(false)
 	if current_info == "info_start":
 		$Timer.start()
+	if Car.collided_car != null:
+		Car.collided_car = null

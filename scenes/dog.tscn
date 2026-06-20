@@ -516,9 +516,6 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k1ip8"]
 size = Vector2(8.596252, 11.038574)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_nmqce"]
-size = Vector2(8.9401245, 8.00029)
-
 [node name="GuideDog" type="CharacterBody2D" unique_id=1593857226]
 process_mode = 1
 z_index = 6
@@ -548,19 +545,3 @@ z_index = -1
 
 [node name="Line2D2" type="Line2D" parent="." unique_id=2005531447]
 z_index = -1
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=652838813]
-position = Vector2(0.78897095, 5.000122)
-shape = SubResource("RectangleShape2D_nmqce")
-
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="." unique_id=1920573758]
-position = Vector2(0.78897095, 5.000122)
-shape = SubResource("RectangleShape2D_nmqce")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionShape2D3" unique_id=789768463]
-position = Vector2(0.78897095, 5.000122)
-shape = SubResource("RectangleShape2D_nmqce")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionShape2D3/CollisionShape2D" unique_id=1403180900]
-position = Vector2(0.78897095, 5.000122)
-shape = SubResource("RectangleShape2D_nmqce")

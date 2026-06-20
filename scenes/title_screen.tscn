@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://bu6ro0oevdy10"]
+
+[ext_resource type="Texture2D" uid="uid://c3vf7ql3kf3gv" path="res://assets/title_screen_backgroound.png" id="1_fgkus"]
+[ext_resource type="Script" uid="uid://bp3rgwkqho7tr" path="res://scripts/dog.gd" id="2_s4lrb"]
+[ext_resource type="Texture2D" uid="uid://sitfndo8eeqb" path="res://assets/Dog/Root_Walk.png" id="2_sa3yf"]
+[ext_resource type="FontFile" uid="uid://vtsdx1rb101t" path="res://assets/PeaberryBase.ttf" id="4_mgrm8"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s4lrb"]
+atlas = ExtResource("2_sa3yf")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mgrm8"]
+atlas = ExtResource("2_sa3yf")
+region = Rect2(64, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dc4i4"]
+atlas = ExtResource("2_sa3yf")
+region = Rect2(128, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e54dn"]
+atlas = ExtResource("2_sa3yf")
+region = Rect2(192, 64, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_3yumr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s4lrb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mgrm8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dc4i4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e54dn")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[node name="title_screen" type="Node2D" unique_id=1196514671]
+script = ExtResource("2_s4lrb")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=567164473]
+position = Vector2(566, 310)
+scale = Vector2(0.51819074, 0.39715967)
+texture = ExtResource("1_fgkus")
+
+[node name="dog" type="Node2D" parent="." unique_id=1021538206]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="dog" unique_id=1071224507]
+position = Vector2(781, 464)
+scale = Vector2(2.3372211, 2.10483)
+sprite_frames = SubResource("SpriteFrames_3yumr")
+animation = &"walk"
+autoplay = "walk"
+frame = 1
+frame_progress = 0.4808367
+
+[node name="Label" type="Label" parent="." unique_id=785593760]
+offset_left = 489.0
+offset_top = 56.0
+offset_right = 650.0
+offset_bottom = 87.0
+theme_override_fonts/font = ExtResource("4_mgrm8")
+theme_override_font_sizes/font_size = 30
+text = "dawg game"
+
+[node name="Label2" type="Label" parent="." unique_id=17978054]
+offset_left = 433.0
+offset_top = 559.0
+offset_right = 706.0
+offset_bottom = 585.0
+theme_override_fonts/font = ExtResource("4_mgrm8")
+theme_override_font_sizes/font_size = 25
+text = "press enter to start"
+
+[node name="dialogSpawn" type="Node2D" parent="." unique_id=578433]
+position = Vector2(568, 618)

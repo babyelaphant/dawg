@@ -6,6 +6,12 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jtldb"]
 size = Vector2(128, 80)
 
+[sub_resource type="Gradient" id="Gradient_en8l0"]
+colors = PackedColorArray(0.12591082, 0.12591085, 0.12591079, 1, 0.27058825, 0.27058825, 0.27058825, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gtsar"]
+gradient = SubResource("Gradient_en8l0")
+
 [node name="Car" type="CharacterBody2D" unique_id=822446399]
 process_mode = 1
 z_index = 11
@@ -24,3 +30,8 @@ shape = SubResource("RectangleShape2D_jtldb")
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1493280490]
 scale = Vector2(0.9999998, 0.9999998)
 texture = ExtResource("2_gtsar")
+
+[node name="Sprite2D" type="Sprite2D" parent="Sprite2D" unique_id=2121641261]
+position = Vector2(-15.999994, 0)
+scale = Vector2(0.43750015, 31.99999)
+texture = SubResource("GradientTexture1D_gtsar")

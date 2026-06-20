@@ -30,9 +30,9 @@ func _physics_process(delta: float) -> void:
 		return
 	
 	if current_waypoint < 3:
-		move_speed = 120
+		move_speed = 105#120
 	else:
-		move_speed = 150
+		move_speed = 120#150
 		
 	#Game_Manager._dog_owner.test.global_position = _car_path.get_child(current_waypoint).position
 	print("collided car: ", collided_car)
@@ -44,15 +44,16 @@ func _physics_process(delta: float) -> void:
 	var collision = move_and_collide(velocity*delta)
 		
 	if collision and collided_car == null:
-		if not collision.get_collider() is DogDowner and not collision.get_collider() is GuideDog : 
+		if !collision.get_collider() == Game_Manager._dog_owner and !collision.get_collider() == Game_Manager._dog: 
 			print("what?")
 			return
 		collided_car = self
 		#.get_collider().get_node("CollisionShape2D").disabled = true
-		Game_Manager.new_attempt()
 		if !Game_Manager.gamelost:
 			global_position = Vector2.ZERO
 	
+		Game_Manager.new_attempt()
+
 	if (_car_path.get_child(current_waypoint).global_position - global_position).length() > 2:
 		velocity = move_direction* move_speed
 

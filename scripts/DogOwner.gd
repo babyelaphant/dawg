@@ -349,14 +349,13 @@ func _physics_process(delta):
 	else:
 		print("cant move")
 		velocity = Vector2.ZERO
-		#guide_dog.movement_cache.clear()
-		#guide_dog.is_building = false
-		#guide_dog.can_pop_movement_cache = false
 		idle()
 	
 	if velocity.length() < 0.1:
 		saved_dog_pos = Vector2.ZERO
-		
+	
+	
+	print("obs: ", check_obstacles())
 	print("CAN MOVE: ", can_move)
 	super._physics_process(delta)
 		
