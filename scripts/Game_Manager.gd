@@ -68,6 +68,7 @@ func saveCheckPoints():
 		
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	await get_tree().create_timer(30.0).timeout
 	if !initialized:
 		initialize_game()
 	

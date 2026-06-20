@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://ckcuvrdvwp2um"]
+
+[ext_resource type="Script" uid="uid://bghrl6gfbpcl" path="res://text_box.gd" id="1_qdwih"]
+[ext_resource type="Texture2D" uid="uid://bo0om4vjj2hov" path="res://assets/test_box.png" id="2_3ojeh"]
+[ext_resource type="FontFile" uid="uid://vtsdx1rb101t" path="res://assets/PeaberryBase.ttf" id="3_nq18v"]
+
+[node name="TextBox" type="MarginContainer" unique_id=1883006858]
+z_index = 15
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_qdwih")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="." unique_id=797709452]
+layout_mode = 2
+texture = ExtResource("2_3ojeh")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 16
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=509394109]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Label" type="Label" parent="MarginContainer" unique_id=1220638977]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_nq18v")
+
+[node name="LetterDisplayTimer" type="Timer" parent="." unique_id=1469315653]
+one_shot = true
+
+[connection signal="timeout" from="LetterDisplayTimer" to="." method="_on_letter_display_timer_timeout"]

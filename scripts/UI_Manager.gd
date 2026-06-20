@@ -6,11 +6,21 @@ extends Node
 @onready var info:RichTextLabel = get_node("InfoText/Container/TextContainer/Info")
 @onready var continue_btn:Button= get_node("InfoText/Container/HBoxContainer/ContinueBtn")
 
+const lines: Array[String] = [
+	"Your faithful dog Buddy is an essential companion in your everyday life.",
+	"He brings you to places that you otherwise could never dream of being.",
+	"But Buddy urgently needs some food.",
+	"He hasn't eaten anything since morning.",
+	"First find a food source in the neighbourhood.",
+]
+
 var info_texts = {}
 var current_info = "info_start"
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	
 	Game_Manager.register_ui(self)
+	
 	info_texts["info_start"] = "Your faithful dog Buddy is an essential companion in your everyday life.\n
 He brings you to places that you otherwise could never dream of being.\n
 But Buddy urgently needs some food.\n
