@@ -28,6 +28,11 @@ func _physics_process(delta: float) -> void:
 	if current_waypoint == _car_path.get_children().size():
 		queue_free()
 		return
+	
+	if current_waypoint < 3:
+		move_speed = 120
+	else:
+		move_speed = 150
 		
 	#Game_Manager._dog_owner.test.global_position = _car_path.get_child(current_waypoint).position
 	print("collided car: ", collided_car)

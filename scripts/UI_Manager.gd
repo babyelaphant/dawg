@@ -18,12 +18,15 @@ He hasn't eaten anything since morning.\n
 First find a food source in the neighbourhood."
 
 	info_texts["eaten food"] = "Mmmmh. That tasted good.\nNow Buddy has enough energy to continue!
+								\nNext Objective: Now Buddy is thirsty. Find a water source somewhere."
+								
+	info_texts["drink water"] = "What a nice refreshment.Buddy no longer is thirsty.\n
 								\nNext Objective: Now go find a cozy place to relax."
+								
 	info_texts["New Attempt"] = "You collided with a car and died.\nRestarting from last checkpoint!"
 	
-	info_texts["game won"] = "Finally! Buddy reached his destination and his dog owner is relieved.
-							  You completed the game in " + str(300-$Timer.time_left) + " seconds!"
-	
+	info_texts["game won"] = "Finally! Buddy reached his destination and his dog owner is relieved."
+				
 	info_texts["game lost(missing objective)"] = "You found a park bench but you could not locate a food source for Budy. Tommy needs to train his dog better next time..."
 	
 	info_texts["game lost(no attempts)"] = "Game Over. You have no attempts remaining. Tommy needs to train his dog better next time..."
@@ -32,16 +35,20 @@ First find a food source in the neighbourhood."
 
 	info_texts["game lost(nervous)"] = "Game Over. Your owner got too nervous! Tommy needs to train his dog better next time..."
 
+	info_texts["other bench"] = "I could sit here, but this is not a cozy place..."
+	
 func update_info(info:String):
 	current_info = info
-	if Game_Manager.gamelost:
+	if Game_Manager.gamelost or Game_Manager.gamewon :
 		if continue_btn:
 			continue_btn.queue_free()
+		if Game_Manager.gamewon:
+			info_texts["game won"] += "You completed the game in " + str(300-$Timer.time_left) + " seconds!"
 	pause_game(true)
-	
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	$TimerLabel.text =  str(ceil($Timer.time_left))
+	$TimerLabel.text =  "Remaining Time: " + str(ceil($Timer.time_left))
 	if timeout():
 		Game_Manager.gamelost = true
 		update_info("game lost(timeout)")

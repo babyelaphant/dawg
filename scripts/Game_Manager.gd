@@ -22,10 +22,13 @@ var npc_spawn1:Node2D
 var npc_spawn2:Node2D
 var park_bench:Node2D
 var park_bench2:Node2D
+var water_place:Node2D
 var gamelost:bool = false
 var gamewon:bool = false
 var checkpoint:Node2D
 signal load_checkpoints
+
+var additional_benches:Node2D
 
 func register_dog(d:GuideDog) ->void:
 	
@@ -68,7 +71,7 @@ func _process(delta: float) -> void:
 	if !initialized:
 		initialize_game()
 	
-	if (npc_spawn1.global_position - _dog.global_position).length() < 150 \
+	if (npc_spawn1.global_position - _dog.global_position).length() < 200 \
 		and _ai_dogs["AI_GuideDog"].move_direction == Vector2.ZERO:
 			trigger_ai_dog("AI_GuideDog")
 	#
@@ -89,8 +92,14 @@ func recalculate_ai_dog_position_offset(dog:String):
 func trigger_ai_dog(dog:String):
 	_ai_dogs[dog].can_move = true
 	
+func reached_water_place(body):
+	objective_completed("find water")
+	_ui.update_info("drink water")
+
+func reached_bench(body):
+	_ui.update_info("other bench")
+	
 func initialize_game():
-	print("INIT GAME")
 	recalculate_dog_position_offset()
 	recalculate_ai_dog_position_offset("AI_GuideDog")
 	recalculate_ai_dog_position_offset("AI_GuideDog2")
@@ -103,16 +112,23 @@ func initialize_game():
 	_ui.start_game()
 	initialized = true
 	objectives["find food"] = false
+	objectives["find water"] = false
 	objectives["find bench"] = false
+	water_place = get_tree().current_scene.get_node("Waterplace")
+	water_place.get_node("Area2D").body_entered.connect(reached_water_place)
 	npc_spawn1 = get_tree().current_scene.get_node("Npc_Spawn")
 	npc_spawn2 = get_tree().current_scene.get_node("Npc_Spawn2")
 	park_bench = get_tree().current_scene.get_node("ParkBench")
 	park_bench2 = get_tree().current_scene.get_node("ParkBench2")
+	additional_benches = get_tree().current_scene.get_node("Additional Benches")
+	
+	for i in range(additional_benches.get_children().size()):
+		additional_benches.get_child(i).get_node("Area2D").body_entered.connect(reached_bench)
+	
 	park_bench.get_node("Area2D").collision_mask = 0xFFFFFFFF
 	park_bench2.get_node("Area2D").collision_mask = 0xFFFFFFFF
 	park_bench.get_node("Area2D").body_entered.connect(reached_park_bench)
 	park_bench2.get_node("Area2D").body_entered.connect(reached_park_bench)
-	print(park_bench2.get_node("Area2D").body_entered.get_connections())
 	checkpoint = get_tree().current_scene.get_node("CheckPoint")
 	#await get_tree().create_timer(randi_range(3,5)).timeout
 	trigger_ai_dog("AI_GuideDog2")
@@ -121,7 +137,7 @@ func initialize_game():
 func reached_park_bench(body):
 	print("reached bench")
 	objective_completed("find bench")
-	if is_objective_completed("find food"):
+	if is_objective_completed("find food") and is_objective_completed("find water"):
 		_ui.update_info("game won")
 		gamewon = true
 	else:
@@ -153,8 +169,7 @@ func place_dog_food():
 func objective_completed(objective:String):
 	if objective in objectives.keys():
 		objectives[objective] = true
-		print("obj complete")
-		
+
 func is_objective_completed(objective:String):
 	if !objectives.has(objective):
 		return false
@@ -171,13 +186,11 @@ func new_attempt():
 	else:
 		gamelost = true
 		_ui.update_info("game lost(no attempts)")
-	_dog.get_node("CollisionShape2D").disabled = false
-	_dog_owner.get_node("CollisionShape2D").disabled = false
 
 func start_from_last_checkpoint():
 	_dog.global_position = checkpoint.global_position
 	_dog_owner.global_position = checkpoint.global_position - Vector2.RIGHT*10-Vector2.RIGHT*10
-	_ui.reset_timer(_ui.get_time_left()-30)
+	_ui.reset_timer(_ui.get_time_left()+30)
 
 func game_lost():
 	if game_paused:return

@@ -212,7 +212,7 @@ func check_obstacles():
 		line.clear_points()
 		line.add_point(to_local(from))
 		line.add_point(to_local(to))
-		line.width = 0.4
+		line.width = 1
 		line.default_color = Color.BLACK
 		if !result.is_empty():
 			line.default_color = Color.RED
