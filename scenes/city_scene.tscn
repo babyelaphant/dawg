@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://dvinlgqjkw4k8" path="res://assets/dog food/dogfood.png" id="18_cmvai"]
 [ext_resource type="PackedScene" uid="uid://q4grnsjo81v6" path="res://scenes/guide_dog.tscn" id="19_cb3sn"]
 [ext_resource type="Script" uid="uid://cb2m1vbgtsfhj" path="res://scripts/car_manager.gd" id="19_fghhq"]
+[ext_resource type="AudioStream" uid="uid://blmxlyygbrfxu" path="res://assets/music/gamejam-doggame.mp3" id="21_x8v0e"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c76h7"]
 size = Vector2(128, 142)
@@ -119403,14 +119404,26 @@ size = Vector2(8.9401245, 8.00029)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n6t2n"]
 size = Vector2(16, 32)
 
+[sub_resource type="Gradient" id="Gradient_x8v0e"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_en8l0"]
+gradient = SubResource("Gradient_x8v0e")
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_teom4"]
-size = Vector2(127.54266, 100.000244)
+size = Vector2(160.03252, 100.000244)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k1ip8"]
 size = Vector2(232, 232)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_valxh"]
 size = Vector2(32, 560)
+
+[sub_resource type="Gradient" id="Gradient_en8l0"]
+colors = PackedColorArray(0.12591082, 0.12591085, 0.12591079, 1, 0.27058825, 0.27058825, 0.27058825, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_vst2o"]
+gradient = SubResource("Gradient_en8l0")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_b2mrm"]
 size = Vector2(80, 32)
@@ -119465,6 +119478,27 @@ size = Vector2(48, 24)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ftmek"]
 size = Vector2(32, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_m6dg4"]
+size = Vector2(56, 59)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3ab84"]
+size = Vector2(56, 59)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p2cxw"]
+size = Vector2(56, 59)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oqlxl"]
+size = Vector2(56, 59)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6ufjw"]
+size = Vector2(56, 59)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f4wxj"]
+size = Vector2(56, 59)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1813r"]
+size = Vector2(44, 38.5)
 
 [node name="city_scene" type="Node2D" unique_id=726836461]
 position = Vector2(0, 1)
@@ -119881,9 +119915,10 @@ metadata/_custom_type_script = "uid://b7sykwvkauqlp"
 [node name="NervousenessLabel" type="Label" parent="CanvasLayer/UIManager/Nervouseness_Meter" unique_id=2126741538]
 layout_mode = 0
 offset_left = 32.0
-offset_top = 8.0
+offset_top = 3.0
 offset_right = 114.0
-offset_bottom = 25.0
+offset_bottom = 20.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 12
 text = "Nervouseness"
 
@@ -119900,6 +119935,7 @@ wait_time = 280.0
 [node name="TimerLabel" type="Label" parent="CanvasLayer/UIManager" unique_id=1186256303]
 offset_right = 40.0
 offset_bottom = 23.0
+theme_override_colors/font_color = Color(0.00011382803, 0.00011382803, 0.00011382803, 1)
 theme_override_font_sizes/font_size = 12
 text = "Time Left:"
 
@@ -120071,13 +120107,12 @@ up_direction = Vector2(0, 1)
 slide_on_ceiling = false
 script = ExtResource("12_picbe")
 test = NodePath("../Test")
-_animations = Array[String](["walk_n", "walk_ne", "walk_e", "walk_se", "walk_s", "walk_sw", "walk_w", "move_nw"])
+_animations = Array[String](["walk_n", "walk_ne", "walk_e", "walk_se", "walk_s", "walk_sw", "walk_w", "walk_nw"])
 
 [node name="AnimatedSprite" type="AnimatedSprite2D" parent="Dog Owner" unique_id=321962670]
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_jbj1t")
-animation = &"walk_w"
-frame_progress = 0.17786928
+animation = &"walk_nw"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Dog Owner" unique_id=1565230904]
 position = Vector2(0.78897095, 5.000122)
@@ -120103,6 +120138,15 @@ visible = false
 z_as_relative = false
 points = PackedVector2Array(-24, 5)
 default_color = Color(0.38039216, 1, 0.21960784, 1)
+
+[node name="AudioListener2D" type="AudioListener2D" parent="Dog Owner" unique_id=613873911]
+position = Vector2(-288.4154, -1333.4558)
+scale = Vector2(1.0014424, 0.9988433)
+current = true
+
+[node name="command_go" type="AudioStreamPlayer2D" parent="Dog Owner" unique_id=1644667048]
+
+[node name="command_stop" type="AudioStreamPlayer2D" parent="Dog Owner" unique_id=2053470318]
 
 [node name="GuideDog" parent="." unique_id=1338871032 node_paths=PackedStringArray("distractionsources", "test") instance=ExtResource("19_cb3sn")]
 position = Vector2(280.00003, 1351)
@@ -120132,24 +120176,18 @@ move_speed = 30.0
 is_ai = true
 _animations = Array[String](["idle_s", "walk_n", "walk_ne", "walk_nw", "walk_e", "walk_se", "walk_s", "walk_sw", "walk_w"])
 
-[node name="Label" type="Label" parent="." unique_id=591427507]
-z_index = 10
-offset_left = 848.0
-offset_top = 831.0
-offset_right = 921.0
-offset_bottom = 880.0
-text = "BLOCKED"
-
 [node name="Blocked Area" type="StaticBody2D" parent="." unique_id=150117437]
 position = Vector2(895.99994, 838.99994)
-scale = Vector2(2.0027993, 0.16000003)
+scale = Vector2(1.9995948, 0.16000003)
 
 [node name="Sprite2D" type="Sprite2D" parent="Blocked Area" unique_id=226160533]
-texture = ExtResource("15_jdm01")
+position = Vector2(0.2496643, 0.0004901886)
+scale = Vector2(0.62217593, 100)
+texture = SubResource("GradientTexture1D_en8l0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Blocked Area" unique_id=1236260534]
 position = Vector2(0, -0.00048828125)
-scale = Vector2(0.9999994, 0.9999996)
+scale = Vector2(0.99999905, 0.9999996)
 shape = SubResource("RectangleShape2D_teom4")
 
 [node name="Waterplace" type="Node2D" parent="." unique_id=533024209]
@@ -120168,13 +120206,28 @@ position = Vector2(864, 255)
 position = Vector2(0, 24)
 shape = SubResource("RectangleShape2D_valxh")
 
+[node name="Sprite2D" type="Sprite2D" parent="ParkWall/CollisionShape2D" unique_id=1069302450]
+position = Vector2(1.424551e-05, 0.2025537)
+scale = Vector2(0.13281247, 563.5949)
+texture = SubResource("GradientTexture1D_vst2o")
+
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="ParkWall" unique_id=1605953701]
 position = Vector2(56, 288)
 shape = SubResource("RectangleShape2D_b2mrm")
 
+[node name="Sprite2D" type="Sprite2D" parent="ParkWall/CollisionShape2D2" unique_id=1291907275]
+position = Vector2(-15.999994, 0.49999985)
+scale = Vector2(0.43750015, 32.99999)
+texture = SubResource("GradientTexture1D_vst2o")
+
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="ParkWall" unique_id=631596808]
 position = Vector2(104, 320)
 shape = SubResource("RectangleShape2D_di6r1")
+
+[node name="Sprite2D" type="Sprite2D" parent="ParkWall/CollisionShape2D3" unique_id=365195684]
+position = Vector2(-15.999994, 5.9604645e-08)
+scale = Vector2(0.43750015, 34.00005)
+texture = SubResource("GradientTexture1D_vst2o")
 
 [node name="House1" type="StaticBody2D" parent="." unique_id=1192007547]
 position = Vector2(696, 1151)
@@ -120325,5 +120378,96 @@ position = Vector2(1104, 775)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Additional Benches/TripleBench2/Area2D" unique_id=2020415278]
 position = Vector2(0, -3.5)
 shape = SubResource("RectangleShape2D_p6laj")
+
+[node name="ingame_music" type="AudioStreamPlayer2D" parent="." unique_id=984403211]
+position = Vector2(720, 647)
+stream = ExtResource("21_x8v0e")
+parameters/looping = true
+
+[node name="Trees" type="StaticBody2D" parent="." unique_id=1195347412]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Trees" unique_id=112041095]
+position = Vector2(911, 62.5)
+shape = SubResource("RectangleShape2D_m6dg4")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Trees" unique_id=476451949]
+position = Vector2(943, 171)
+shape = SubResource("RectangleShape2D_3ab84")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Trees" unique_id=290567954]
+position = Vector2(1024, 141)
+shape = SubResource("RectangleShape2D_p2cxw")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Trees" unique_id=156403028]
+position = Vector2(959, 108)
+shape = SubResource("RectangleShape2D_oqlxl")
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="Trees" unique_id=1195474587]
+position = Vector2(963, 61)
+shape = SubResource("RectangleShape2D_6ufjw")
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="Trees" unique_id=1030822609]
+position = Vector2(1055, 76)
+shape = SubResource("RectangleShape2D_f4wxj")
+
+[node name="CollisionShape2D7" type="CollisionShape2D" parent="Trees" unique_id=1263719674]
+position = Vector2(1022, 12)
+shape = SubResource("RectangleShape2D_f4wxj")
+
+[node name="CollisionShape2D8" type="CollisionShape2D" parent="Trees" unique_id=504642681]
+position = Vector2(912, -3)
+shape = SubResource("RectangleShape2D_f4wxj")
+
+[node name="CollisionShape2D9" type="CollisionShape2D" parent="Trees" unique_id=1612113265]
+position = Vector2(1150, 79)
+shape = SubResource("RectangleShape2D_f4wxj")
+
+[node name="CollisionShape2D12" type="CollisionShape2D" parent="Trees" unique_id=1811557101]
+position = Vector2(1232, 44)
+shape = SubResource("RectangleShape2D_f4wxj")
+
+[node name="CollisionShape2D13" type="CollisionShape2D" parent="Trees" unique_id=1175949421]
+position = Vector2(1230, 124)
+shape = SubResource("RectangleShape2D_f4wxj")
+
+[node name="CollisionShape2D14" type="CollisionShape2D" parent="Trees" unique_id=1868195581]
+position = Vector2(1280, 173)
+shape = SubResource("RectangleShape2D_f4wxj")
+
+[node name="CollisionShape2D15" type="CollisionShape2D" parent="Trees" unique_id=1493788680]
+position = Vector2(1362, 236)
+shape = SubResource("RectangleShape2D_f4wxj")
+
+[node name="CollisionShape2D16" type="CollisionShape2D" parent="Trees" unique_id=373362409]
+position = Vector2(1377, 144)
+shape = SubResource("RectangleShape2D_f4wxj")
+
+[node name="CollisionShape2D17" type="CollisionShape2D" parent="Trees" unique_id=1194685587]
+position = Vector2(1313, 126)
+shape = SubResource("RectangleShape2D_f4wxj")
+
+[node name="CollisionShape2D18" type="CollisionShape2D" parent="Trees" unique_id=1244448375]
+position = Vector2(1360, 63)
+shape = SubResource("RectangleShape2D_f4wxj")
+
+[node name="CollisionShape2D19" type="CollisionShape2D" parent="Trees" unique_id=796881723]
+position = Vector2(1307, 16)
+shape = SubResource("RectangleShape2D_f4wxj")
+
+[node name="CollisionShape2D20" type="CollisionShape2D" parent="Trees" unique_id=860893852]
+position = Vector2(1355, 0)
+shape = SubResource("RectangleShape2D_f4wxj")
+
+[node name="CollisionShape2D21" type="CollisionShape2D" parent="Trees" unique_id=1624510345]
+position = Vector2(1409, 17)
+shape = SubResource("RectangleShape2D_f4wxj")
+
+[node name="CollisionShape2D10" type="CollisionShape2D" parent="Trees" unique_id=1093474741]
+position = Vector2(1137, 13)
+shape = SubResource("RectangleShape2D_f4wxj")
+
+[node name="CollisionShape2D11" type="CollisionShape2D" parent="Trees" unique_id=28084078]
+position = Vector2(1078, 34.25)
+shape = SubResource("RectangleShape2D_1813r")
 
 [editable path="AI_GuideDog"]

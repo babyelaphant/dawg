@@ -133,6 +133,7 @@ func initialize_game():
 	#await get_tree().create_timer(randi_range(3,5)).timeout
 	trigger_ai_dog("AI_GuideDog2")
 	#saveCheckPoints()
+	Sound_Manager.initialize()
 	
 func reached_park_bench(body):
 	print("reached bench")

@@ -51,6 +51,7 @@ func move():
 	if abs(move_direction.angle_to(Vector2.from_angle(PI)))< PI/8:
 		target_anim = "walk_w"
 	if abs(move_direction.angle_to(Vector2.from_angle(PI + PI/4)))< PI/8:
+		print("WALKING NW")
 		target_anim = "walk_nw"
 	if abs(move_direction.angle_to(Vector2.from_angle(PI + PI/2)))< PI/8:
 		target_anim = "walk_n"

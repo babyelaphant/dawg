@@ -35,8 +35,7 @@ func _ready() -> void:
 	Game_Manager.register_dog(self)
 	set_process_input(true)
 	collision_mask = 1 # e.g., Layer 1
-	if !is_ai:
-		can_move = true
+	can_move = true
 
 
 func check_obstacles():
@@ -145,8 +144,8 @@ func _physics_process(delta: float) -> void:
 	if ai_controlled and nearby_dog != []:
 		print("smells dog")
 		move_direction = (nearby_dog[0].global_position - global_position).normalized()
-		move_speed = 30 + ((nearby_dog[0].global_position - global_position).length()/50)*10
-		if move_direction.length() > 0.1:
+		move_speed = 30 + ((nearby_dog[0].global_position - global_position).length()/150)*10
+		if (nearby_dog[0].global_position - global_position).length() > 15:
 			velocity = move_direction.normalized()* move_speed
 		else:
 			velocity = velocity.move_toward(Vector2.ZERO, move_speed)
@@ -288,25 +287,22 @@ func wall_check():
 				#if(wall_normal.distance_to(old_wall_normal) > 0.3):
 					#on_wall_normal_changed.emit(wall_normal,old_wall_normal)
 				break
-		if found_wall:
-			break
-				
+		#if found_wall: break
 	if !found_wall:
 		old_wall_normal = Vector2.ZERO
 		is_near_wall = false
 	else:	
 		pass
-		#var mindist = 100
-		#for i in range(hits.size()):
-			#var dist = (global_position - hits[i].position).length()
-			#if dist < mindist:
-				#mindist = dist
-				#wn = hits[i].normal
-		#old_wall_normal = wall_normal	
-		##wall_normal = Vector2.ZERO
+		var mindist = 100
+		for i in range(hits.size()):
+			var dist = (global_position - hits[i].position).length()
+			if dist < mindist:
+				mindist = dist
+				wn = hits[i].normal
+		old_wall_normal = wall_normal	
+		wall_normal = wn
 	##if wn != Vector2.ZERO:
 		#wall_normal = wn
-	print("WALLN: ", wall_normal)	
 	
 func switchedDirections() -> bool:
 	print ("test: ", abs(old_move_direction.angle_to(move_direction)))
@@ -326,6 +322,6 @@ func smells_dog() -> Array[GuideDog]:
 	for i in range(dogs.size()):
 		if dogs[i] == self:
 			continue
-		if (dogs[i].global_position - global_position).length() < 100:
+		if (dogs[i].global_position - global_position).length() < 150:
 			return [dogs[i]]
 	return []

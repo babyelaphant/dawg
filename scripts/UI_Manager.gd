@@ -21,7 +21,7 @@ First find a food source in the neighbourhood."
 								\nNext Objective: Now Buddy is thirsty. Find a water source somewhere."
 								
 	info_texts["drink water"] = "What a nice refreshment.Buddy no longer is thirsty.\n
-								\nNext Objective: Now go find a cozy place to relax."
+								\nNext Objective: Now go find a place to relax."
 								
 	info_texts["New Attempt"] = "You collided with a car and died.\nRestarting from last checkpoint!"
 	

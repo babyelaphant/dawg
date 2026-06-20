@@ -156,13 +156,13 @@ func _process(delta: float) -> void:
 func on_dog_changed_direction(dog:GuideDog) -> void:
 	if dog != guide_dog:
 		return
-	#can_follow = false
-#
-	#print("chdir")
-	#await get_tree().create_timer(.25).timeout
-	#temp1 = find_random_target_offset()
+	can_follow = false
+	
+	print("chdir")
+	await get_tree().create_timer(.1).timeout
+	temp1 = find_random_target_offset()
 	#
-	#can_follow = true
+	can_follow = true
 
 func on_dog_started_moving(dog:GuideDog) -> void:
 	
@@ -203,10 +203,11 @@ func check_obstacles():
 			if min_temp < temp:
 				min_temp = temp
 				print("mintemp ", min_temp)
-			to = result.position 
+				hitResult = result
+			#to = result.position 
 			
-		if !result.is_empty() and hitResult.is_empty():
-			hitResult = result
+		#if !result.is_empty() and hitResult.is_empty():
+			#hitResult = result
 
 		var line = get_node("Line2D" + str(i))
 		line.clear_points()
@@ -216,11 +217,19 @@ func check_obstacles():
 		line.default_color = Color.BLACK
 		if !result.is_empty():
 			line.default_color = Color.RED
-	return !hitResult.is_empty() and min_temp +5< (guide_dog.global_position-global_position).length()
+	
+	if !hitResult.is_empty():
+		var shape_index = hitResult.shape
+
+		var owner_id = hitResult.collider.shape_find_owner(shape_index)
+		var shape_node = hitResult.collider.shape_owner_get_owner(owner_id)
+		print("Hit shape:", shape_node.name)
+		
+	return !hitResult.is_empty()# and min_temp +5< (guide_dog.global_position-global_position).length()
 
 func _physics_process(delta):
 	if !can_follow:	
-		idle()
+		#idle()
 		velocity = Vector2.ZERO
 		return
 		
@@ -264,8 +273,7 @@ func _physics_process(delta):
 		if !result.is_empty() and hitResult.is_empty():
 			hitResult = result
 
-	test.global_position = guide_dog.global_position + target_offset
-	print("targetoffsetdist: ", (guide_dog.global_position + target_offset - guide_dog.global_position).length())
+	#test.global_position = guide_dog.global_position + target_offset
 	
 	#get_node("CollisionShape2D").disabled = check_obstacles()
 	#test.global_position = saved_dog_pos

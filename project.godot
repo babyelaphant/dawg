@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 
 Game_Manager="*uid://bxhbg8kyygs6h"
 G_Globals="*uid://cvmjc5websn0y"
+Sound_Manager="*uid://c3ankf4wi7ivh"
 
 [input]
 
