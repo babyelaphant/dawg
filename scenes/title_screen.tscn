@@ -70,10 +70,10 @@ theme_override_font_sizes/font_size = 30
 text = "dawg game"
 
 [node name="Label2" type="Label" parent="." unique_id=17978054]
-offset_left = 433.0
-offset_top = 559.0
-offset_right = 706.0
-offset_bottom = 585.0
+offset_left = 304.0
+offset_top = 558.0
+offset_right = 624.0
+offset_bottom = 584.0
 theme_override_fonts/font = ExtResource("4_mgrm8")
 theme_override_font_sizes/font_size = 25
 text = "press enter to start or "
@@ -82,10 +82,10 @@ text = "press enter to start or "
 position = Vector2(568, 618)
 
 [node name="SkipButton" type="Button" parent="." unique_id=1843385857]
-offset_left = 757.0
-offset_top = 553.0
-offset_right = 824.0
-offset_bottom = 587.0
+offset_left = 628.0
+offset_top = 552.0
+offset_right = 695.0
+offset_bottom = 586.0
 theme_override_colors/font_color = Color(0.5921569, 1, 0, 1)
 theme_override_fonts/font = ExtResource("4_mgrm8")
 theme_override_font_sizes/font_size = 25

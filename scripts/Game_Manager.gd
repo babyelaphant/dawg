@@ -15,7 +15,6 @@ var objectives_list = ["find_food", "cross road", "avoid dog", "find_bench"]
 var num_tries = 0
 var dog_checkpoint:Vector2 = Vector2.ZERO
 var dog_owner_checkpoint:Vector2 = Vector2.ZERO
-var time_checkpoint:float = 0
 var game_paused = false
 var initialized_game = false
 var npc_spawn1:Node2D
@@ -26,6 +25,8 @@ var water_place:Node2D
 var gamelost:bool = false
 var gamewon:bool = false
 var checkpoint:Node2D
+var time_checkpoint:float = 0
+var nervousness_checkpoint:float = 0
 signal load_checkpoints
 
 var additional_benches:Node2D
@@ -62,6 +63,7 @@ func saveCheckPoints():
 			dog_checkpoint = _dog.global_position
 			dog_owner_checkpoint = _dog_owner.global_position
 			time_checkpoint = _ui.get_time_left()
+			nervousness_checkpoint = _dog_owner.total_nervouseness
 			print("saved checkpoint")
 		await get_tree().process_frame
 		#await get_tree().create_timer(2).timeout
@@ -69,15 +71,10 @@ func saveCheckPoints():
 		
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	#await get_tree().create_timer(30.0).timeout
 	if !initialized:
 		load_title_screen()
 		initialized = true
-		#initialize_game()
-		#if (npc_spawn2.global_position - _dog.global_position).length() < 150 \
-		#and _ai_dogs["AI_GuideDog2"].move_direction == Vector2.ZERO:
-			#trigger_ai_dog("AI_GuideDog2")
-			
+
 func recalculate_dog_position_offset():
 	dog_position_offset =  _dog_owner.global_position -_dog.global_position
 	
@@ -139,7 +136,8 @@ func initialize_game():
 	park_bench2.get_node("Area2D").body_entered.connect(reached_park_bench)
 	checkpoint = get_tree().current_scene.get_node("CheckPoint")
 	trigger_ai_dog("AI_GuideDog2")	#saveCheckPoints()
-
+	checkpoint.get_node("Area2D").body_entered.connect(save_time_checkpoint)
+	
 	_dog.distractionsources.get_node("DogFood").visible = false
 	place_dog_food()
 	
@@ -151,13 +149,16 @@ func initialize_game():
 	Sound_Manager.initialize()
 	Game_Camera.initialize(_dog_owner.global_position)
 	initialized_game = true
+
+func save_time_checkpoint():
+	time_checkpoint = _ui.get_time_left()
 	
 func reached_park_bench(body):
 	print("reached bench")
 	objective_completed("find bench")
 	if is_objective_completed("find food") and is_objective_completed("find water"):
-		_ui.update_info("game won")
 		gamewon = true
+		_ui.update_info("game won")
 	else:
 		gamelost = true
 		_ui.update_info("game lost(missing objective)")
@@ -198,12 +199,12 @@ func place_dog_food():
 	query.collide_with_bodies = true
 	var result = space_state.intersect_point(query)
 	
-	while (!result.is_empty() and  !can_place_dog_food(v,result)) or (v-_dog.global_position).length() < 200:
+	while (!result.is_empty() or !can_place_dog_food(v,result) or(v-_dog.global_position).length() < 200):
 		posx = randi_range(13,392)
 		posy = randi_range(1095,1350)
 		v = Vector2(posx,posy)
 	
-		query = PhysicsPointQueryParameters2D.new()
+		#query = PhysicsPointQueryParameters2D.new()
 		query.position = v
 		query.collide_with_bodies = true
 		result = space_state.intersect_point(query)
@@ -234,7 +235,11 @@ func new_attempt():
 func start_from_last_checkpoint():
 	_dog.global_position = checkpoint.global_position
 	_dog_owner.global_position = checkpoint.global_position - Vector2.RIGHT*10-Vector2.RIGHT*10
-	_ui.reset_timer(_ui.get_time_left()+30)
+	_dog_owner.reset_nervousness(nervousness_checkpoint)
+	while(game_paused):
+		await get_tree().process_frame
+	_ui.reset_timer(time_checkpoint)
+	#_ui.start_timer()
 
 func game_lost():
 	if game_paused:return

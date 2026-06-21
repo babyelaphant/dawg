@@ -5,13 +5,14 @@ extends Node
 @onready var command_label:Label= $Command_Label
 @onready var info:RichTextLabel = get_node("InfoText/Container/TextContainer/Info")
 @onready var continue_btn:Button= get_node("InfoText/Container/HBoxContainer/ContinueBtn")
+@onready var timer = get_tree().current_scene.get_node("Timer")
 
 var info_texts = {}
 var current_info = "info_start"
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	Game_Manager.register_ui(self)
-	info_texts["info_start"] = "First find a food source in the neighbourhood."
+	info_texts["info_start"] = "First find a food source in the neighbourhood.\n\nBe careful: Disobeying commands will make your owner nervous.\nAfter all she trained you and has confidence in you!"
 
 	info_texts["eaten food"] = "Mmmmh. That tasted good.\nNow Buddy has enough energy to continue!
 								\nNext Objective: Now Buddy is thirsty. Find a water source somewhere."
@@ -21,15 +22,15 @@ func _ready() -> void:
 								
 	info_texts["New Attempt"] = "You collided with a car and died.\nRestarting from last checkpoint!"
 	
-	info_texts["game won"] = "Finally! Buddy reached his destination and his dog owner is relieved."
+	info_texts["game won"] = "Congratulations, you reached your destination and won the game.\nYour dog owner can be proud of Buddy!."
 				
-	info_texts["game lost(missing objective)"] = "You found a park bench but you could not locate a food source for Budy. Tommy needs to train his dog better next time..."
+	info_texts["game lost(missing objective)"] = "You found a park bench but you could not locate a food source for Budy. The owner needs to train his dog better next time..."
 	
-	info_texts["game lost(no attempts)"] = "Game Over. You have no attempts remaining.\nTommy needs to train his dog better next time..."
+	info_texts["game lost(no attempts)"] = "Game Over. You have no attempts remaining.\nThe owner needs to train his dog better next time..."
 		
-	info_texts["game lost(timeout)"] = "Game Over. Your time has run out!\nTommy needs to train his dog better next time..."
+	info_texts["game lost(timeout)"] = "Game Over. Your time has run out!\nThe owner needs to train his dog better next time..."
 
-	info_texts["game lost(nervous)"] = "Game Over. Your owner got too nervous!\nTommy needs to train his dog better next time..."
+	info_texts["game lost(nervous)"] = "Game Over. Your owner got too nervous!\nThe owner needs to train his dog better next time..."
 
 	info_texts["other bench"] = "I could sit here, but this is not a cozy place..."
 	
@@ -39,7 +40,7 @@ func update_info(info:String):
 		if continue_btn:
 			continue_btn.queue_free()
 		if Game_Manager.gamewon:
-			var score = snappedf(300-$Timer.time_left, 0.1)
+			var score = snappedf(300-timer.time_left, 0.1)
 			info_texts["game won"] += "\nYou completed the game in " + str(score) + " seconds!"
 			if Game_Manager.new_highscore(score):
 				info_texts["game won"] += "\nThis is your new Highscore!"
@@ -47,20 +48,21 @@ func update_info(info:String):
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	$TimerLabel.text =  "Remaining Time: " + str(ceil($Timer.time_left))
+	$TimerLabel.text =  "Remaining Time: " + str(ceil(timer.time_left))
 	if timeout():
 		Game_Manager.gamelost = true
 		update_info("game lost(timeout)")
 	
 func reset_timer(value:float):
-	$Timer.wait_time = value
-	$Timer.start()
+	timer.wait_time = value
+	print("WAIT TIME: ", value)
+	#$Timer.start()
 
 func get_time_left():
-	return $Timer.time_left
+	return timer.time_left
 	
 func timeout() -> bool:
-	return $Timer.time_left == 0 and $Timer.is_stopped() == false
+	return timer.time_left == 0 and timer.is_stopped() == false
 	
 func pause_game(pause:bool):
 	get_tree().paused = pause
@@ -74,7 +76,10 @@ func start_game():
 
 func increase_nervouseness_meter(value):
 	nv_progress_bar.increase__meter(value)
-	
+
+func reset_nervouseness_meter(value):
+	nv_progress_bar.reset_meter(value)
+
 func show_command(command):
 	print("SHOW CMD")
 	command_label.visible = true
@@ -82,10 +87,13 @@ func show_command(command):
 	await get_tree().create_timer(1).timeout
 	command_label.visible = false
 	
+func start_timer():
+	timer.start()
+	
 func continue_btn_pressed():
 	if !Game_Manager.gamewon and !Game_Manager.gamelost:
 		pause_game(false)
 	if current_info == "info_start":
-		$Timer.start()
+		timer.start()
 	if Car.collided_car != null:
 		Car.collided_car = null

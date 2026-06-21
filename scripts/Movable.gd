@@ -40,22 +40,24 @@ func play_animation(direction:String):
 		sprite.play(direction)
 
 func move():
-	if abs(move_direction.angle())< PI/8:
-		target_anim = "walk_e"
-	if abs(move_direction.angle_to(Vector2.from_angle(PI/4))) < PI/8:
-		target_anim = "walk_se"
-	if abs(move_direction.angle_to(Vector2.from_angle(PI/2)))< PI/8:
-		target_anim = "walk_s"
-	if abs(move_direction.angle_to(Vector2.from_angle(PI/2 + PI/4)))< PI/8:
-		target_anim = "walk_sw"
-	if abs(move_direction.angle_to(Vector2.from_angle(PI)))< PI/8:
-		target_anim = "walk_w"
-	if abs(move_direction.angle_to(Vector2.from_angle(PI + PI/4)))< PI/8:
-		print("WALKING NW")
-		target_anim = "walk_nw"
-	if abs(move_direction.angle_to(Vector2.from_angle(PI + PI/2)))< PI/8:
-		target_anim = "walk_n"
-	if abs(move_direction.angle_to(Vector2.from_angle(PI + PI/2 +PI/4)))< PI/8:
-		target_anim = "walk_ne"
+	
+	if velocity.length() > 0:
+		if abs(move_direction.angle())< PI/8:
+			target_anim = "walk_e"
+		if abs(move_direction.angle_to(Vector2.from_angle(PI/4))) < PI/8:
+			target_anim = "walk_se"
+		if abs(move_direction.angle_to(Vector2.from_angle(PI/2)))< PI/8:
+			target_anim = "walk_s"
+		if abs(move_direction.angle_to(Vector2.from_angle(PI/2 + PI/4)))< PI/8:
+			target_anim = "walk_sw"
+		if abs(move_direction.angle_to(Vector2.from_angle(PI)))< PI/8:
+			target_anim = "walk_w"
+		if abs(move_direction.angle_to(Vector2.from_angle(PI + PI/4)))< PI/8:
+			print("WALKING NW")
+			target_anim = "walk_nw"
+		if abs(move_direction.angle_to(Vector2.from_angle(PI + PI/2)))< PI/8:
+			target_anim = "walk_n"
+		if abs(move_direction.angle_to(Vector2.from_angle(PI + PI/2 +PI/4)))< PI/8:
+			target_anim = "walk_ne"
 
-	play_animation(target_anim)
+		play_animation(target_anim)

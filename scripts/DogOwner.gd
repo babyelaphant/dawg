@@ -12,20 +12,21 @@ var avoiding_obstacles:bool = false
 var saved_dog_pos:Vector2 = Vector2.ZERO
 var saved_wallnormal:Vector2 = Vector2.ZERO
 var saved_dog_positions = []
-var	go_interval_min = 2
-var go_interval_max = 5
+var	go_interval_min = 5
+var go_interval_max = 10
 var stop_interval = 0
 var waiting_for_response :bool = false
 var response_delay:float= 0
-var critical_response_delay = 8
+var critical_response_delay:float = 3
+var base_nervousness:float = 4
 var guide_dog:GuideDog
 var dog_position_offset:Vector2 = Vector2.ZERO
 var temp1:Vector2
 
 @export var test:Sprite2D
 
-var current_command:String= "GO"
-var old_command:String = "STOP"
+var current_command:String= "STOP"
+var old_command:String = "GO"
 
 class NervousenessLevel:
 	var _max_nervouseness : float
@@ -44,7 +45,7 @@ class NervousenessLevel:
 	#get the max anger
 	func get_max_nervouseness():
 		return _max_nervouseness
-		
+
 	func increase_nervouseness(nervouseness) -> void:
 		if _current_nervouseness < _max_nervouseness:
 			_current_nervouseness += nervouseness
@@ -85,13 +86,18 @@ func command_dog(repeat:bool = false):
 		command_dog(true)
 		print("critical response delayy")
 		print("making nervous")
-		make_nervous(4)
+		make_nervous(base_nervousness)
 	else:
-		make_nervous(response_delay*0.5)
+		make_nervous((response_delay/critical_response_delay)*base_nervousness)
 		print("not waiting for respo")
 		waiting_for_response = false
 
 
+func reset_nervousness(value:float) -> void:
+	total_nervouseness = value
+	NervousenessLevel.currentLevel = total_nervouseness/10
+	Game_Manager._ui.reset_nervouseness_meter(value)
+	
 #Make the bus driver angry
 func make_nervous(nervouseness_amount) -> void:
 	nervouseness_levels[NervousenessLevel.currentLevel].increase_nervouseness(nervouseness_amount)
@@ -142,10 +148,13 @@ func _process(delta: float) -> void:
 			if random < nervouseness_levels[NervousenessLevel.currentLevel]._max_nervouseness:
 				command_dog(false)
 			timer = 0
+		
+		#dog stopped responsing to command
 		elif !guide_dog.respond_to_command(current_command):
-			make_nervous(2);
-			command_dog(true)
-			print("DISOBEYED, REPEATING COMMAND GO")
+			if !guide_dog.eating_food:
+				make_nervous(2);
+				command_dog(true)
+				print("DISOBEYED, REPEATING COMMAND GO")
 			timer = 0
 
 	else:

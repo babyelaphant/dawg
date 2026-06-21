@@ -12,3 +12,7 @@ func _process(delta: float) -> void:
 func increase__meter(amount) -> void:
 	if self.value < self.max_value:
 		self.value += amount
+
+func reset_meter(value) ->void:
+	if self.value < self.max_value:
+		self.value = value

@@ -169,7 +169,7 @@ func _physics_process(delta: float) -> void:
 			else:
 				move_speed = 30 + (distance_to_food/200)*10
 				
-			if distance_to_food > 1:
+			if distance_to_food > 2:
 				velocity = move_direction.normalized()* move_speed
 			else:
 				velocity = velocity.move_toward(Vector2.ZERO, move_speed)
@@ -207,8 +207,8 @@ func _physics_process(delta: float) -> void:
 		timer = 0
 		#can_pop_movement_cache = false
 		can_move = false
-	else:
-		move()
+
+	move()
 	
 	old_move_direction = move_direction
 
@@ -319,3 +319,20 @@ func smells_dog() -> Array[GuideDog]:
 		if (dogs[i].global_position - global_position).length() < 150:
 			return [dogs[i]]
 	return []
+
+func move():
+	super.move()
+	if velocity.length() < 0.1:
+		if target_anim == "walk_n":
+			target_anim = "idle_n"
+		elif target_anim == "walk_e":
+			target_anim = "idle_e"
+		elif target_anim == "walk_s":
+			target_anim = "idle_s"
+		elif target_anim == "walk_w":
+			target_anim = "idle_w"
+		elif target_anim in ["walk_nw","walk_sw"]:
+			target_anim = "idle_w"
+		elif target_anim in ["walk_ne","walk_se"]:
+			target_anim = "idle_e"
+		play_animation(target_anim)

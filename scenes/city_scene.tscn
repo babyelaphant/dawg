@@ -76,6 +76,12 @@ size = Vector2(46, 7)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tg6hx"]
 size = Vector2(12, 24)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kyc4v"]
+size = Vector2(65.296234, 30.991222)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b6n8c"]
+size = Vector2(65.296234, 30.991222)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vst2o"]
 size = Vector2(8, 17)
 
@@ -119405,6 +119411,9 @@ size = Vector2(8.9401245, 8.00029)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n6t2n"]
 size = Vector2(16, 32)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0wut5"]
+size = Vector2(128, 20)
+
 [sub_resource type="Gradient" id="Gradient_x8v0e"]
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
 
@@ -119417,20 +119426,20 @@ size = Vector2(160.03252, 100.000244)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k1ip8"]
 size = Vector2(232, 232)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_valxh"]
-size = Vector2(32, 560)
-
 [sub_resource type="Gradient" id="Gradient_en8l0"]
 colors = PackedColorArray(0.12591082, 0.12591085, 0.12591079, 1, 0.27058825, 0.27058825, 0.27058825, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_vst2o"]
 gradient = SubResource("Gradient_en8l0")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_valxh"]
+size = Vector2(32, 560)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_b2mrm"]
-size = Vector2(80, 32)
+size = Vector2(32, 560)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_di6r1"]
-size = Vector2(80, 32)
+size = Vector2(32, 560)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hlfpy"]
 size = Vector2(296, 280)
@@ -119589,6 +119598,34 @@ shape = SubResource("RectangleShape2D_tg6hx")
 z_index = 5
 position = Vector2(95.71875, 1237)
 shape = SubResource("RectangleShape2D_c76h7")
+
+[node name="CollisionShape2D29" type="CollisionShape2D" parent="colliders_neighborhood" unique_id=1462246360]
+z_index = 5
+position = Vector2(71.12796, 1168.111)
+rotation = -0.46774822
+scale = Vector2(0.99999994, 0.99999994)
+shape = SubResource("RectangleShape2D_kyc4v")
+
+[node name="CollisionShape2D30" type="CollisionShape2D" parent="colliders_neighborhood" unique_id=563245520]
+z_index = 5
+position = Vector2(120.99991, 1167.0001)
+rotation = 0.46774822
+scale = Vector2(0.99999994, 0.99999994)
+shape = SubResource("RectangleShape2D_b6n8c")
+
+[node name="CollisionShape2D31" type="CollisionShape2D" parent="colliders_neighborhood" unique_id=1755457223]
+z_index = 5
+position = Vector2(278, 1168.111)
+rotation = -0.46774822
+scale = Vector2(0.99999994, 0.99999994)
+shape = SubResource("RectangleShape2D_kyc4v")
+
+[node name="CollisionShape2D32" type="CollisionShape2D" parent="colliders_neighborhood" unique_id=745566003]
+z_index = 5
+position = Vector2(327.87195, 1167.0001)
+rotation = 0.46774822
+scale = Vector2(0.99999994, 0.99999994)
+shape = SubResource("RectangleShape2D_b6n8c")
 
 [node name="CollisionShape2D19" type="CollisionShape2D" parent="colliders_neighborhood" unique_id=529188463]
 position = Vector2(157.21875, 1320.875)
@@ -119898,6 +119935,9 @@ position = Vector2(0, 0.38562012)
 scale = Vector2(0.05, 0.05)
 texture = ExtResource("15_jdm01")
 
+[node name="Timer" type="Timer" parent="." unique_id=1828500020]
+wait_time = 280.0
+
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1029459694]
 
 [node name="UIManager" type="Node" parent="CanvasLayer" unique_id=1303972121]
@@ -119939,10 +119979,7 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
 theme_override_constants/shadow_outline_size = 5
 theme_override_fonts/font = ExtResource("18_en8l0")
-theme_override_font_sizes/font_size = 12
-
-[node name="Timer" type="Timer" parent="CanvasLayer/UIManager" unique_id=1828500020]
-wait_time = 280.0
+theme_override_font_sizes/font_size = 18
 
 [node name="TimerLabel" type="Label" parent="CanvasLayer/UIManager" unique_id=1186256303]
 offset_right = 40.0
@@ -119969,19 +120006,16 @@ layout_mode = 2
 layout_direction = 2
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 5
-theme_override_constants/margin_bottom = 5
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
 [node name="Info" type="RichTextLabel" parent="CanvasLayer/UIManager/InfoText/Container/TextContainer" unique_id=955677121]
 clip_contents = false
 layout_direction = 2
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("18_en8l0")
-bbcode_enabled = true
-text = "
-"
 fit_content = true
 autowrap_mode = 0
 autowrap_trim_flags = 0
@@ -120113,6 +120147,12 @@ shape = SubResource("RectangleShape2D_n6t2n")
 [node name="CheckPoint" type="Node2D" parent="." unique_id=16080428]
 position = Vector2(385, 822)
 
+[node name="Area2D" type="Area2D" parent="CheckPoint" unique_id=365073480]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CheckPoint/Area2D" unique_id=821508986]
+position = Vector2(-1, 0)
+shape = SubResource("RectangleShape2D_0wut5")
+
 [node name="Camera2D" type="Camera2D" parent="." unique_id=587531070]
 position = Vector2(288.88614, 1334.9459)
 scale = Vector2(0.99855965, 1.001158)
@@ -120172,7 +120212,10 @@ scale = Vector2(10, 10)
 distractionsources = NodePath("../DistractionSources")
 test = NodePath("../Test")
 move_speed = 30.0
-_animations = Array[String](["idle_s", "walk_n", "walk_ne", "walk_nw", "walk_e", "walk_se", "walk_s", "walk_sw", "walk_w"])
+_animations = Array[String](["idle_s", "walk_n", "walk_ne", "walk_nw", "walk_e", "walk_se", "walk_s", "walk_sw", "walk_w", "idle_n", "idle_e", "idle_w"])
+
+[node name="AnimatedSprite" parent="GuideDog" index="0" unique_id=1070021760]
+animation = &"idle_w"
 
 [node name="AI_GuideDog" parent="." unique_id=936849769 node_paths=PackedStringArray("distractionsources", "test", "ai_path") instance=ExtResource("19_cb3sn")]
 position = Vector2(800, 31)
@@ -120220,32 +120263,39 @@ shape = SubResource("RectangleShape2D_k1ip8")
 [node name="ParkWall" type="StaticBody2D" parent="." unique_id=1171169144]
 position = Vector2(864, 255)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ParkWall" unique_id=1829291622]
-position = Vector2(0, 24)
-shape = SubResource("RectangleShape2D_valxh")
-
-[node name="Sprite2D" type="Sprite2D" parent="ParkWall/CollisionShape2D" unique_id=1069302450]
-position = Vector2(1.424551e-05, 0.2025537)
+[node name="Sprite2D" type="Sprite2D" parent="ParkWall" unique_id=1069302450]
+position = Vector2(0, 24.202545)
 scale = Vector2(0.13281247, 563.5949)
 texture = SubResource("GradientTexture1D_vst2o")
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="ParkWall" unique_id=1605953701]
-position = Vector2(56, 288)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ParkWall/Sprite2D" unique_id=1829291622]
+position = Vector2(0, -0.0003593862)
+scale = Vector2(7.529413, 0.001774324)
+shape = SubResource("RectangleShape2D_valxh")
+
+[node name="Sprite2D2" type="Sprite2D" parent="ParkWall" unique_id=1784724733]
+position = Vector2(55.999996, 288)
+rotation = 1.5707964
+scale = Vector2(0.133, 80)
+texture = SubResource("GradientTexture1D_vst2o")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ParkWall/Sprite2D2" unique_id=982720200]
+visible = false
+position = Vector2(0, -0.0003593862)
+scale = Vector2(7.529413, 0.001774324)
 shape = SubResource("RectangleShape2D_b2mrm")
 
-[node name="Sprite2D" type="Sprite2D" parent="ParkWall/CollisionShape2D2" unique_id=1291907275]
-position = Vector2(-15.999994, 0.49999985)
-scale = Vector2(0.43750015, 32.99999)
+[node name="Sprite2D3" type="Sprite2D" parent="ParkWall" unique_id=1412620878]
+position = Vector2(106.85198, 320)
+rotation = 1.5707964
+scale = Vector2(0.133, 93.10395)
 texture = SubResource("GradientTexture1D_vst2o")
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="ParkWall" unique_id=631596808]
-position = Vector2(104, 320)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ParkWall/Sprite2D3" unique_id=1638269805]
+visible = false
+position = Vector2(0, -0.0003593862)
+scale = Vector2(7.529413, 0.001774324)
 shape = SubResource("RectangleShape2D_di6r1")
-
-[node name="Sprite2D" type="Sprite2D" parent="ParkWall/CollisionShape2D3" unique_id=365195684]
-position = Vector2(-15.999994, 5.9604645e-08)
-scale = Vector2(0.43750015, 34.00005)
-texture = SubResource("GradientTexture1D_vst2o")
 
 [node name="House1" type="StaticBody2D" parent="." unique_id=1192007547]
 position = Vector2(696, 1151)
@@ -120488,4 +120538,5 @@ shape = SubResource("RectangleShape2D_f4wxj")
 position = Vector2(1078, 34.25)
 shape = SubResource("RectangleShape2D_1813r")
 
+[editable path="GuideDog"]
 [editable path="AI_GuideDog"]
