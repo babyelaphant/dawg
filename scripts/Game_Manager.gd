@@ -101,13 +101,11 @@ func reached_bench(body):
 func load_title_screen():
 	get_tree().change_scene_to_packed(title_scene)
 	
-	
 func load_game_scene():
 	get_tree().change_scene_to_packed(game_scene)
 	await get_tree().scene_changed
 	await get_tree().create_timer(0.5).timeout
 	initialize_game()
-			
 			
 func initialize_game():
 	print("Loading Game")
@@ -176,7 +174,7 @@ func place_dog_food():
 	query.collide_with_bodies = true
 	var result = space_state.intersect_point(query)
 	
-	while (!result.is_empty() and  can_place_dog_food(v,result)) or (v-_dog.global_position).length() < 200:
+	while (!result.is_empty() and  !can_place_dog_food(v,result)) or (v-_dog.global_position).length() < 200:
 		posx = randi_range(13,392)
 		posy = randi_range(1095,1350)
 		v = Vector2(posx,posy)
