@@ -22,7 +22,6 @@
 [ext_resource type="PackedScene" uid="uid://q4grnsjo81v6" path="res://scenes/guide_dog.tscn" id="19_cb3sn"]
 [ext_resource type="Script" uid="uid://cb2m1vbgtsfhj" path="res://scripts/car_manager.gd" id="19_fghhq"]
 [ext_resource type="AudioStream" uid="uid://blmxlyygbrfxu" path="res://assets/music/gamejam-doggame.mp3" id="21_x8v0e"]
-[ext_resource type="PackedScene" uid="uid://bu6ro0oevdy10" path="res://scenes/title_screen.tscn" id="23_vst2o"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c76h7"]
 size = Vector2(128, 142)
@@ -119940,7 +119939,7 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
 theme_override_constants/shadow_outline_size = 5
 theme_override_fonts/font = ExtResource("18_en8l0")
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 12
 
 [node name="Timer" type="Timer" parent="CanvasLayer/UIManager" unique_id=1828500020]
 wait_time = 280.0
@@ -119950,7 +119949,7 @@ offset_right = 40.0
 offset_bottom = 23.0
 theme_override_colors/font_color = Color(0.00011382803, 0.00011382803, 0.00011382803, 1)
 theme_override_fonts/font = ExtResource("18_en8l0")
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 18
 text = "Time Left:"
 
 [node name="InfoText" type="PanelContainer" parent="CanvasLayer/UIManager" unique_id=42975319]
@@ -119979,6 +119978,7 @@ theme_override_constants/margin_bottom = 5
 clip_contents = false
 layout_direction = 2
 layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("18_en8l0")
 bbcode_enabled = true
 text = "
 "
@@ -119995,6 +119995,7 @@ layout_mode = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 0.8745098, 1)
 theme_override_constants/line_spacing = 40
+theme_override_fonts/font = ExtResource("18_en8l0")
 theme_override_font_sizes/font_size = 16
 text = "Continue"
 
@@ -120002,6 +120003,7 @@ text = "Continue"
 position = Vector2(0, -1)
 
 [node name="DogFood" type="Sprite2D" parent="DistractionSources" unique_id=517389740]
+visible = false
 z_index = 11
 position = Vector2(220.25563, 1215)
 scale = Vector2(0.025, 0.025)
@@ -120111,6 +120113,11 @@ shape = SubResource("RectangleShape2D_n6t2n")
 [node name="CheckPoint" type="Node2D" parent="." unique_id=16080428]
 position = Vector2(385, 822)
 
+[node name="Camera2D" type="Camera2D" parent="." unique_id=587531070]
+position = Vector2(288.88614, 1334.9459)
+scale = Vector2(0.99855965, 1.001158)
+zoom = Vector2(2.53, 2.53)
+
 [node name="Dog Owner" type="CharacterBody2D" parent="." unique_id=101522349 node_paths=PackedStringArray("test")]
 process_mode = 1
 z_index = 6
@@ -120132,10 +120139,6 @@ animation = &"walk_nw"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Dog Owner" unique_id=1565230904]
 position = Vector2(0.78897095, 5.000122)
 shape = SubResource("RectangleShape2D_nmqce")
-
-[node name="Camera2D" type="Camera2D" parent="Dog Owner" unique_id=587531070]
-position = Vector2(0.88742065, -0.053955078)
-zoom = Vector2(2.53, 2.53)
 
 [node name="Line2D0" type="Line2D" parent="Dog Owner" unique_id=707706796]
 visible = false
@@ -120485,8 +120488,4 @@ shape = SubResource("RectangleShape2D_f4wxj")
 position = Vector2(1078, 34.25)
 shape = SubResource("RectangleShape2D_1813r")
 
-[node name="title_screen" parent="." unique_id=1196514671 instance=ExtResource("23_vst2o")]
-z_index = 12
-
 [editable path="AI_GuideDog"]
-[editable path="title_screen"]

@@ -15,7 +15,10 @@ var enters = 0
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
+	$SkipButton.pressed.connect(skip_dialogue)
 
+func skip_dialogue():
+	await Game_Manager.load_game_scene()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -28,5 +31,6 @@ func _process(delta: float) -> void:
 func _unhandled_input(event):
 	if (event.is_action_pressed("advance_dialog")):
 		$Label2.visible = false
+		$SkipButton.visible = false
 		DialogueManager.start_dialog($dialogSpawn.global_position, lines)
 		print(DialogueManager.current_line_index)

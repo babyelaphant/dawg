@@ -109,7 +109,6 @@ func load_game_scene():
 			
 func initialize_game():
 	print("Loading Game")
-	#_ui = get_tree().current_scene.get_node("CanvasLayer/UIManager")
 	recalculate_dog_position_offset()
 	recalculate_ai_dog_position_offset("AI_GuideDog")
 	recalculate_ai_dog_position_offset("AI_GuideDog2")
@@ -119,7 +118,6 @@ func initialize_game():
 	_ai_dog_owners["AI_Dog_Owner2"].initialize(_ai_dogs["AI_GuideDog2"],  ai_dog_position_offset1)
 	_ai_dogs["AI_GuideDog"].initialize(_ai_dog_owners["AI_Dog_Owner"])
 	_ai_dogs["AI_GuideDog2"].initialize(_ai_dog_owners["AI_Dog_Owner2"])
-	_ui.start_game()
 	initialized = true
 	objectives["find food"] = false
 	objectives["find water"] = false
@@ -140,18 +138,19 @@ func initialize_game():
 	park_bench.get_node("Area2D").body_entered.connect(reached_park_bench)
 	park_bench2.get_node("Area2D").body_entered.connect(reached_park_bench)
 	checkpoint = get_tree().current_scene.get_node("CheckPoint")
-	#await get_tree().create_timer(randi_range(3,5)).timeout
-	trigger_ai_dog("AI_GuideDog2")
-	#saveCheckPoints()
-	Sound_Manager.initialize()
+	trigger_ai_dog("AI_GuideDog2")	#saveCheckPoints()
+
+	_dog.distractionsources.get_node("DogFood").visible = false
 	place_dog_food()
 	
 	if (npc_spawn1.global_position - _dog.global_position).length() < 200 \
 		and _ai_dogs["AI_GuideDog"].move_direction == Vector2.ZERO:
 			trigger_ai_dog("AI_GuideDog")
 	#
+	_ui.start_game()
+	Sound_Manager.initialize()
+	Game_Camera.initialize(_dog_owner.global_position)
 	initialized_game = true
-	
 	
 func reached_park_bench(body):
 	print("reached bench")
@@ -187,6 +186,9 @@ func new_highscore(score:float) ->bool:
 	return result
 	
 func place_dog_food():
+	
+	_dog.distractionsources.get_node("DogFood").visible = true
+	
 	var posx = randi_range(13,392)
 	var posy = randi_range(1095,1350)
 	var v= Vector2(posx,posy)

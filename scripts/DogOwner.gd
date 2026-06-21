@@ -125,6 +125,8 @@ func _process(delta: float) -> void:
 	if is_ai:
 		return
 	
+	Game_Camera.move(global_position)
+
 	if!Game_Manager.initialized_game:
 		return
 		
@@ -155,7 +157,7 @@ func _process(delta: float) -> void:
 			command_dog(true)
 			print("DISOBEYED, REPEATING COMMAND STOP")
 			timer = 0
-
+			
 func on_dog_changed_direction(dog:GuideDog) -> void:
 	if dog != guide_dog:
 		return
