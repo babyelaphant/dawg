@@ -22,6 +22,7 @@
 [ext_resource type="PackedScene" uid="uid://q4grnsjo81v6" path="res://scenes/guide_dog.tscn" id="19_cb3sn"]
 [ext_resource type="Script" uid="uid://cb2m1vbgtsfhj" path="res://scripts/car_manager.gd" id="19_fghhq"]
 [ext_resource type="AudioStream" uid="uid://blmxlyygbrfxu" path="res://assets/music/gamejam-doggame.mp3" id="21_x8v0e"]
+[ext_resource type="PackedScene" uid="uid://bu6ro0oevdy10" path="res://scenes/title_screen.tscn" id="23_vst2o"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c76h7"]
 size = Vector2(128, 142)
@@ -120008,6 +120009,7 @@ texture = ExtResource("18_cmvai")
 
 [node name="Car_Manager" type="Node2D" parent="." unique_id=1071715197]
 script = ExtResource("19_fghhq")
+spawn_interval_max = 3.0
 
 [node name="CarPath" type="Node2D" parent="Car_Manager" unique_id=1090216674]
 
@@ -120483,4 +120485,8 @@ shape = SubResource("RectangleShape2D_f4wxj")
 position = Vector2(1078, 34.25)
 shape = SubResource("RectangleShape2D_1813r")
 
+[node name="title_screen" parent="." unique_id=1196514671 instance=ExtResource("23_vst2o")]
+z_index = 12
+
 [editable path="AI_GuideDog"]
+[editable path="title_screen"]

@@ -1,10 +1,10 @@
 class_name UIManager
 extends Node
 
-@onready var nv_progress_bar:NervousenessProgressBar = $Nervouseness_Meter
-@onready var command_label:Label= $Command_Label
-@onready var info:RichTextLabel = get_node("InfoText/Container/TextContainer/Info")
-@onready var continue_btn:Button= get_node("InfoText/Container/HBoxContainer/ContinueBtn")
+@onready var nv_progress_bar:NervousenessProgressBar = get_node("Nervouseness_Meter")
+@onready var command_label:Label = get_node("Command_Label")
+@onready var info = get_node("InfoText/Container/TextContainer/Info")
+@onready var continue_btn = get_node("InfoText/Container/HBoxContainer/ContinueBtn")
 
 const lines: Array[String] = [
 	"Your faithful dog Buddy is an essential companion in your everyday life.",
@@ -46,7 +46,11 @@ First find a food source in the neighbourhood."
 	info_texts["game lost(nervous)"] = "Game Over. Your owner got too nervous! Tommy needs to train his dog better next time..."
 
 	info_texts["other bench"] = "I could sit here, but this is not a cozy place..."
-	
+
+func initialize():
+	info = get_node("InfoText/Container/TextContainer/Info")
+	continue_btn= get_node("InfoText/Container/HBoxContainer/ContinueBtn")
+
 func update_info(info:String):
 	current_info = info
 	if Game_Manager.gamelost or Game_Manager.gamewon :
@@ -71,7 +75,7 @@ func get_time_left():
 	return $Timer.time_left
 	
 func timeout():
-	return $Timer.time_left == 0
+	return $Timer.time_left == 0 and $Timer.is_stopped() == false
 	
 func pause_game(pause:bool):
 	get_tree().paused = pause

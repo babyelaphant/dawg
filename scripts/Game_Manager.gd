@@ -17,7 +17,7 @@ var dog_checkpoint:Vector2 = Vector2.ZERO
 var dog_owner_checkpoint:Vector2 = Vector2.ZERO
 var time_checkpoint:float = 0
 var game_paused = false
-
+var initialized_game = false
 var npc_spawn1:Node2D
 var npc_spawn2:Node2D
 var park_bench:Node2D
@@ -30,11 +30,12 @@ signal load_checkpoints
 
 var additional_benches:Node2D
 
+var title_scene = load("res://scenes/title_screen.tscn")
+var game_scene =  load("res://scenes/city_scene.tscn")
 func register_dog(d:GuideDog) ->void:
 	
 	if !d.is_ai:
 		_dog = d
-		place_dog_food()
 
 	else:
 		_ai_dogs[d.name] = d
@@ -70,13 +71,10 @@ func saveCheckPoints():
 func _process(delta: float) -> void:
 	#await get_tree().create_timer(30.0).timeout
 	if !initialized:
-		initialize_game()
-	
-	if (npc_spawn1.global_position - _dog.global_position).length() < 200 \
-		and _ai_dogs["AI_GuideDog"].move_direction == Vector2.ZERO:
-			trigger_ai_dog("AI_GuideDog")
-	#
-	#if (npc_spawn2.global_position - _dog.global_position).length() < 150 \
+		load_title_screen()
+		initialized = true
+		#initialize_game()
+		#if (npc_spawn2.global_position - _dog.global_position).length() < 150 \
 		#and _ai_dogs["AI_GuideDog2"].move_direction == Vector2.ZERO:
 			#trigger_ai_dog("AI_GuideDog2")
 			
@@ -100,7 +98,21 @@ func reached_water_place(body):
 func reached_bench(body):
 	_ui.update_info("other bench")
 	
+func load_title_screen():
+	get_tree().change_scene_to_packed(title_scene)
+	
+	
+func load_game_scene():
+	get_tree().change_scene_to_packed(game_scene)
+	await get_tree().scene_changed
+	await get_tree().create_timer(0.5).timeout
+	initialize_game()
+			
+			
 func initialize_game():
+	print("Loading Game")
+	#_ui = get_tree().current_scene.get_node("CanvasLayer/UIManager")
+	_ui.initialize()
 	recalculate_dog_position_offset()
 	recalculate_ai_dog_position_offset("AI_GuideDog")
 	recalculate_ai_dog_position_offset("AI_GuideDog2")
@@ -135,6 +147,14 @@ func initialize_game():
 	trigger_ai_dog("AI_GuideDog2")
 	#saveCheckPoints()
 	Sound_Manager.initialize()
+	place_dog_food()
+	
+	if (npc_spawn1.global_position - _dog.global_position).length() < 200 \
+		and _ai_dogs["AI_GuideDog"].move_direction == Vector2.ZERO:
+			trigger_ai_dog("AI_GuideDog")
+	#
+	initialized_game = true
+	
 	
 func reached_park_bench(body):
 	print("reached bench")

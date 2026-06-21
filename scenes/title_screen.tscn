@@ -57,8 +57,8 @@ scale = Vector2(2.3372211, 2.10483)
 sprite_frames = SubResource("SpriteFrames_3yumr")
 animation = &"walk"
 autoplay = "walk"
-frame = 1
-frame_progress = 0.4808367
+frame = 2
+frame_progress = 0.16677548
 
 [node name="Label" type="Label" parent="." unique_id=785593760]
 offset_left = 489.0

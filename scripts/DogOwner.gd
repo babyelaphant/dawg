@@ -124,6 +124,9 @@ func initialize(guidedog:GuideDog, dog_pos_offset) -> void:
 func _process(delta: float) -> void:
 	if is_ai:
 		return
+	
+	if!Game_Manager.initialized_game:
+		return
 		
 	if waiting_for_response or guide_dog.eating_food:
 		timer = 0
@@ -215,8 +218,6 @@ func check_obstacles():
 		line.add_point(to_local(to))
 		line.width = 1
 		line.default_color = Color.BLACK
-		if !result.is_empty():
-			line.default_color = Color.RED
 	
 	if !hitResult.is_empty():
 		var shape_index = hitResult.shape
@@ -232,16 +233,6 @@ func _physics_process(delta):
 		#idle()
 		velocity = Vector2.ZERO
 		return
-		
-	print("=== FRAME START ===")
-	print("avoiding_obstacles: ", avoiding_obstacles)
-	print("saved_dog_pos: ", saved_dog_pos)
-	print("target_offset: ", target_offset)
-	print("move_direction BEFORE: ", move_direction)
-	print("can_pop: ", guide_dog.can_pop_movement_cache)
-	print("cache size: ", guide_dog.movement_cache.size())
-	print("is_building: ", guide_dog.is_building)
-	print("check_obstacles: ", check_obstacles())
 	
 	#var temp1 :Vector2 = find_random_target_offset()
 	#if temp1 != Vector2.ZERO and !avoiding_obstacles and guide_dog.move_direction != Vector2.ZERO:target_offset = temp1
@@ -265,22 +256,10 @@ func _physics_process(delta):
 		query.exclude = [self, guide_dog]
 		
 		var result = get_world_2d().direct_space_state.intersect_ray(query)
-		#line.clear_points()
-		#line.add_point(to_local(from))
-		#line.add_point(to_local(to))
-		#line.width = .2
-		
+
 		if !result.is_empty() and hitResult.is_empty():
 			hitResult = result
 
-	#test.global_position = guide_dog.global_position + target_offset
-	
-	#get_node("CollisionShape2D").disabled = check_obstacles()
-	#test.global_position = saved_dog_pos
-	#if avoiding_obstacles and ((global_position-saved_dog_pos).length() < 0.3):
-		#print("saved dog pos IS ", saved_dog_pos)
-		#avoiding_obstacles = false
-		
 	if avoiding_obstacles and ((global_position - saved_dog_pos).length() < 0.3) :
 		avoiding_obstacles = false
 		#saved_dog_pos = Vector2.ZERO

@@ -134,7 +134,7 @@ func _physics_process(delta: float) -> void:
 	var distance_to_food = (global_position - distractionsources.get_node("DogFood").global_position).length()
 	
 	if is_ai:
-		ai_controlled =  !nearby_dog.is_empty() and abs((nearby_dog[0] as GuideDog).move_direction.angle_to(move_direction)) > PI/2
+		ai_controlled =  !nearby_dog.is_empty() #and abs((nearby_dog[0] as GuideDog).move_direction.angle_to(move_direction)) > PI/2
 	else:
 		ai_controlled =  abs(Input.get_axis("move_left", "move_right")) < 0.1 \
 		and abs(Input.get_axis("move_up", "move_down")) < 0.1 and ((smells_dog_food() and distance_to_food <=40) or (!nearby_dog.is_empty()) and (velocity.length() < 0.1 or  abs((nearby_dog[0] as GuideDog).move_direction.angle_to(move_direction)) > PI/2))

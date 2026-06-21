@@ -30,9 +30,9 @@ func _physics_process(delta: float) -> void:
 		return
 	
 	if current_waypoint < 3:
-		move_speed = 120
+		move_speed = 105
 	else:
-		move_speed = 150
+		move_speed = 120
 		
 	#Game_Manager._dog_owner.test.global_position = _car_path.get_child(current_waypoint).position
 	print("collided car: ", collided_car)
