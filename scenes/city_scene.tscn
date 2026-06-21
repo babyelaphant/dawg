@@ -119989,10 +119989,17 @@ metadata/_custom_type_script = "uid://cfhn45a5lr640"
 
 [node name="Nervouseness_Meter" type="TextureProgressBar" parent="CanvasLayer/UIManager" unique_id=277615765]
 custom_minimum_size = Vector2(150, 0)
-offset_left = 427.0
-offset_top = 570.0
-offset_right = 1227.0
-offset_bottom = 620.0
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -172.0
+offset_top = -156.0
+offset_right = 628.0
+offset_bottom = -106.0
+grow_horizontal = 2
+grow_vertical = 0
 texture_over = ExtResource("16_vst2o")
 texture_progress = ExtResource("16_fghhq")
 script = ExtResource("17_cmvai")
@@ -120023,14 +120030,14 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
 theme_override_constants/shadow_outline_size = 5
 theme_override_fonts/font = ExtResource("18_en8l0")
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 30
 
 [node name="TimerLabel" type="Label" parent="CanvasLayer/UIManager" unique_id=1186256303]
 offset_right = 40.0
 offset_bottom = 23.0
 theme_override_colors/font_color = Color(0.8627451, 0.043137256, 0, 1)
 theme_override_fonts/font = ExtResource("18_en8l0")
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 24
 text = "Time Left:"
 
 [node name="InfoText" type="PanelContainer" parent="CanvasLayer/UIManager" unique_id=42975319]
@@ -120201,8 +120208,7 @@ shape = SubResource("RectangleShape2D_0wut5")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1897733608]
 position = Vector2(275.99997, 1324)
-scale = Vector2(0.99855965, 1.001158)
-zoom = Vector2(2.5, 2.5)
+zoom = Vector2(3.5, 3.5)
 position_smoothing_enabled = true
 rotation_smoothing_enabled = true
 

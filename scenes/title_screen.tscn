@@ -45,11 +45,12 @@ animations = [{
 script = ExtResource("2_s4lrb")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=567164473]
-position = Vector2(566, 310)
+position = Vector2(986, 522)
 scale = Vector2(0.51819074, 0.39715967)
 texture = ExtResource("1_fgkus")
 
 [node name="dog" type="Node2D" parent="." unique_id=1021538206]
+position = Vector2(420, 212)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="dog" unique_id=1071224507]
 position = Vector2(781, 464)
@@ -61,31 +62,31 @@ frame = 2
 frame_progress = 0.16677548
 
 [node name="Label" type="Label" parent="." unique_id=785593760]
-offset_left = 344.0
-offset_top = 56.0
-offset_right = 751.0
-offset_bottom = 87.0
+offset_left = 764.0
+offset_top = 268.0
+offset_right = 1171.0
+offset_bottom = 299.0
 theme_override_fonts/font = ExtResource("4_mgrm8")
 theme_override_font_sizes/font_size = 30
 text = "Buddy's little Adventure"
 
 [node name="Label2" type="Label" parent="." unique_id=17978054]
-offset_left = 304.0
-offset_top = 558.0
-offset_right = 624.0
-offset_bottom = 584.0
+offset_left = 724.0
+offset_top = 770.0
+offset_right = 1044.0
+offset_bottom = 796.0
 theme_override_fonts/font = ExtResource("4_mgrm8")
 theme_override_font_sizes/font_size = 25
 text = "press enter to start or "
 
 [node name="dialogSpawn" type="Node2D" parent="." unique_id=578433]
-position = Vector2(568, 618)
+position = Vector2(988, 830)
 
 [node name="SkipButton" type="Button" parent="." unique_id=1843385857]
-offset_left = 628.0
-offset_top = 552.0
-offset_right = 695.0
-offset_bottom = 586.0
+offset_left = 1048.0
+offset_top = 764.0
+offset_right = 1115.0
+offset_bottom = 798.0
 theme_override_colors/font_color = Color(0.5921569, 1, 0, 1)
 theme_override_fonts/font = ExtResource("4_mgrm8")
 theme_override_font_sizes/font_size = 25

@@ -24,6 +24,12 @@ Sound_Manager="*uid://c3ankf4wi7ivh"
 DialogueManager="*uid://dcqkq17hdkrnq"
 Game_Camera="*uid://cydo8rvl607rt"
 
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="canvas_items"
+
 [input]
 
 move_left={
