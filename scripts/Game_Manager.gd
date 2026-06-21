@@ -110,7 +110,6 @@ func load_game_scene():
 func initialize_game():
 	print("Loading Game")
 	#_ui = get_tree().current_scene.get_node("CanvasLayer/UIManager")
-	_ui.initialize()
 	recalculate_dog_position_offset()
 	recalculate_ai_dog_position_offset("AI_GuideDog")
 	recalculate_ai_dog_position_offset("AI_GuideDog2")
@@ -163,6 +162,29 @@ func reached_park_bench(body):
 	else:
 		gamelost = true
 		_ui.update_info("game lost(missing objective)")
+
+func new_highscore(score:float) ->bool:
+	if not FileAccess.file_exists("user://save_game.dat"):
+		var file = FileAccess.open("user://save_game.dat", FileAccess.WRITE)
+		file.close()
+
+	var savefile = FileAccess.open("user://save_game.dat", FileAccess.READ_WRITE)
+	var content = savefile.get_as_text()
+	var result = false
+	if savefile:
+		savefile.seek_end()
+		if content == "":
+			result=true
+			savefile.store_string(str(snappedf(score, 0.1)))
+		else:
+			for line in content.split("\n"):
+				if int(line) > score:
+					result = true
+					savefile.store_string(str(score))
+					break
+					
+		savefile.close()
+	return result
 	
 func place_dog_food():
 	var posx = randi_range(13,392)

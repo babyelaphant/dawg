@@ -1,26 +1,16 @@
 class_name UIManager
 extends Node
 
-@onready var nv_progress_bar:NervousenessProgressBar = get_node("Nervouseness_Meter")
-@onready var command_label:Label = get_node("Command_Label")
-@onready var info = get_node("InfoText/Container/TextContainer/Info")
-@onready var continue_btn = get_node("InfoText/Container/HBoxContainer/ContinueBtn")
-
-const lines: Array[String] = [
-	"Your faithful dog Buddy is an essential companion in your everyday life.",
-	"He brings you to places that you otherwise could never dream of being.",
-	"But Buddy urgently needs some food.",
-	"He hasn't eaten anything since morning.",
-	"First find a food source in the neighbourhood.",
-]
+@onready var nv_progress_bar:NervousenessProgressBar = $Nervouseness_Meter
+@onready var command_label:Label= $Command_Label
+@onready var info:RichTextLabel = get_node("InfoText/Container/TextContainer/Info")
+@onready var continue_btn:Button= get_node("InfoText/Container/HBoxContainer/ContinueBtn")
 
 var info_texts = {}
 var current_info = "info_start"
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	
 	Game_Manager.register_ui(self)
-	
 	info_texts["info_start"] = "Your faithful dog Buddy is an essential companion in your everyday life.\n
 He brings you to places that you otherwise could never dream of being.\n
 But Buddy urgently needs some food.\n
@@ -39,25 +29,24 @@ First find a food source in the neighbourhood."
 				
 	info_texts["game lost(missing objective)"] = "You found a park bench but you could not locate a food source for Budy. Tommy needs to train his dog better next time..."
 	
-	info_texts["game lost(no attempts)"] = "Game Over. You have no attempts remaining. Tommy needs to train his dog better next time..."
+	info_texts["game lost(no attempts)"] = "Game Over. You have no attempts remaining.\nTommy needs to train his dog better next time..."
 		
-	info_texts["game lost(timeout)"] = "Game Over. Your time has run out! Tommy needs to train his dog better next time..."
+	info_texts["game lost(timeout)"] = "Game Over. Your time has run out!\nTommy needs to train his dog better next time..."
 
-	info_texts["game lost(nervous)"] = "Game Over. Your owner got too nervous! Tommy needs to train his dog better next time..."
+	info_texts["game lost(nervous)"] = "Game Over. Your owner got too nervous!\nTommy needs to train his dog better next time..."
 
 	info_texts["other bench"] = "I could sit here, but this is not a cozy place..."
-
-func initialize():
-	info = get_node("InfoText/Container/TextContainer/Info")
-	continue_btn= get_node("InfoText/Container/HBoxContainer/ContinueBtn")
-
+	
 func update_info(info:String):
 	current_info = info
 	if Game_Manager.gamelost or Game_Manager.gamewon :
 		if continue_btn:
 			continue_btn.queue_free()
 		if Game_Manager.gamewon:
-			info_texts["game won"] += "You completed the game in " + str(300-$Timer.time_left) + " seconds!"
+			var score = snappedf(300-$Timer.time_left, 0.1)
+			info_texts["game won"] += "\nYou completed the game in " + str(score) + " seconds!"
+			if Game_Manager.new_highscore(score):
+				info_texts["game won"] += "\nThis is your new Highscore!"
 	pause_game(true)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -74,7 +63,7 @@ func reset_timer(value:float):
 func get_time_left():
 	return $Timer.time_left
 	
-func timeout():
+func timeout() -> bool:
 	return $Timer.time_left == 0 and $Timer.is_stopped() == false
 	
 func pause_game(pause:bool):
@@ -102,3 +91,5 @@ func continue_btn_pressed():
 		pause_game(false)
 	if current_info == "info_start":
 		$Timer.start()
+	if Car.collided_car != null:
+		Car.collided_car = null
