@@ -61,13 +61,13 @@ frame = 2
 frame_progress = 0.16677548
 
 [node name="Label" type="Label" parent="." unique_id=785593760]
-offset_left = 489.0
+offset_left = 344.0
 offset_top = 56.0
-offset_right = 650.0
+offset_right = 751.0
 offset_bottom = 87.0
 theme_override_fonts/font = ExtResource("4_mgrm8")
 theme_override_font_sizes/font_size = 30
-text = "dawg game"
+text = "Buddy's little Adventure"
 
 [node name="Label2" type="Label" parent="." unique_id=17978054]
 offset_left = 304.0
