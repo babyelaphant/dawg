@@ -2,12 +2,12 @@ class_name SoundManager
 extends Node
 
 var ingame_music:AudioStreamPlayer2D
-var dog_commands = {}
-var dog_barks = {}
+var sounds : Dictionary[String, AudioStream]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass
+	sounds["bark1"] = load("res://assets/sounds/bark1.wav")
+	sounds["bark2"] = load("res://assets/sounds/bark2.wav")
 
 func _on_music_finished():
 	ingame_music.play()
@@ -17,22 +17,14 @@ func initialize():
 	ingame_music.finished.connect(_on_music_finished)
 	ingame_music.play()
 	
-func register_dog_bark(dog:GuideDog, bark:AudioStreamPlayer2D):
-	dog_barks[dog.name] = bark 
 
-func register_command(owner:DogDowner, command:AudioStreamPlayer2D):
-	dog_commands[command.name] = command
-		
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
 
-func play_dog_bark(bark:String):
-	if dog_barks.has(bark):
-		return
-	dog_barks[bark].play()
+func play_sound(source:AudioStreamPlayer2D, sound:String):
+	if sounds.has(sound):
+		source.stream = sounds[sound]
+		source.play()
+		print("playing: ", sound)
 	
-func play_dog_command(command:String):
-	if dog_commands.has(command):
-		return
-	dog_commands[command].play()

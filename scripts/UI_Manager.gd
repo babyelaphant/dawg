@@ -24,7 +24,7 @@ func _ready() -> void:
 	
 	info_texts["game won"] = "Congratulations, you reached your destination and won the game.\nYour dog owner can be proud of Buddy!."
 				
-	info_texts["game lost(missing objective)"] = "You found a park bench but you could not locate a food source for Budy. The owner needs to train his dog better next time..."
+	info_texts["game lost(missing objective)"] = "You found a park bench but you could not locate a food source for Buddy. The owner needs to train his dog better next time..."
 	
 	info_texts["game lost(no attempts)"] = "Game Over. You have no attempts remaining.\nThe owner needs to train his dog better next time..."
 		
@@ -40,7 +40,7 @@ func update_info(info:String):
 		if continue_btn:
 			continue_btn.queue_free()
 		if Game_Manager.gamewon:
-			var score = snappedf(300-timer.time_left, 0.1)
+			var score = snappedf(280-timer.time_left, 0.1)
 			info_texts["game won"] += "\nYou completed the game in " + str(score) + " seconds!"
 			if Game_Manager.new_highscore(score):
 				info_texts["game won"] += "\nThis is your new Highscore!"
@@ -73,6 +73,7 @@ func pause_game(pause:bool):
 func start_game():
 	pause_game(true)
 	continue_btn.pressed.connect(continue_btn_pressed)
+	nv_progress_bar.reset_meter(0)
 
 func increase_nervouseness_meter(value):
 	nv_progress_bar.increase__meter(value)

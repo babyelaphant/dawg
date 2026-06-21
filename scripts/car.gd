@@ -44,8 +44,8 @@ func _physics_process(delta: float) -> void:
 	var collision = move_and_collide(velocity*delta)
 		
 	if collision and collided_car == null:
-		if not collision.get_collider() is DogDowner and not collision.get_collider() is GuideDog : 
-			print("what?")
+		if !collision.get_collider() == Game_Manager._dog_owner and !collision.get_collider() == Game_Manager._dog : 
+			print("what? -> ", collision.get_collider())
 			return
 		collided_car = self
 		#.get_collider().get_node("CollisionShape2D").disabled = true

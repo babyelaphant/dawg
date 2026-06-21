@@ -126,16 +126,14 @@ func initialize(guidedog:GuideDog, dog_pos_offset) -> void:
 	guide_dog.on_started_moving.connect(on_dog_started_moving)
 	guide_dog.on_move_direction_changed.connect(on_dog_changed_direction)
 	# Called every frame. 'delta' is the elapsed time since the previous frame.
-	
+
 func _process(delta: float) -> void:
+	
 	if is_ai:
 		return
-	
-	Game_Camera.move(global_position)
-
 	if!Game_Manager.initialized_game:
 		return
-		
+	Game_Camera.move(global_position,delta)
 	if waiting_for_response or guide_dog.eating_food:
 		timer = 0
 		return

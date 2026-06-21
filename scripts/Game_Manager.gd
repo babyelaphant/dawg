@@ -40,6 +40,7 @@ func register_dog(d:GuideDog) ->void:
 
 	else:
 		_ai_dogs[d.name] = d
+		_ai_dogs[d.name].can_move = false
 
 func register_ui(ui:UIManager):
 	_ui = ui
@@ -54,27 +55,18 @@ func register_dog_owner(do:DogDowner) ->void:
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	randomize()
-	
-func saveCheckPoints():
-	while(!gamelost and !gamewon):
-		if _dog == null:
-			return
-		if _dog.velocity.length() <= 0 and Car.collided_car == null:
-			dog_checkpoint = _dog.global_position
-			dog_owner_checkpoint = _dog_owner.global_position
-			time_checkpoint = _ui.get_time_left()
-			nervousness_checkpoint = _dog_owner.total_nervouseness
-			print("saved checkpoint")
-		await get_tree().process_frame
-		#await get_tree().create_timer(2).timeout
-		
 		
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if !initialized:
 		load_title_screen()
 		initialized = true
-
+	elif initialized_game:
+		if (npc_spawn1.global_position - _dog.global_position).length() < 200 \
+		and _ai_dogs["AI_GuideDog"].move_direction == Vector2.ZERO:
+			print("dist to ai dog: " , (npc_spawn1.global_position - _dog.global_position).length())
+			trigger_ai_dog("AI_GuideDog")
+			
 func recalculate_dog_position_offset():
 	dog_position_offset =  _dog_owner.global_position -_dog.global_position
 	
@@ -136,22 +128,19 @@ func initialize_game():
 	park_bench2.get_node("Area2D").body_entered.connect(reached_park_bench)
 	checkpoint = get_tree().current_scene.get_node("CheckPoint")
 	trigger_ai_dog("AI_GuideDog2")	#saveCheckPoints()
-	checkpoint.get_node("Area2D").body_entered.connect(save_time_checkpoint)
+	checkpoint.get_node("Area2D").body_entered.connect(save_checkpoints)
 	
 	_dog.distractionsources.get_node("DogFood").visible = false
 	place_dog_food()
-	
-	if (npc_spawn1.global_position - _dog.global_position).length() < 200 \
-		and _ai_dogs["AI_GuideDog"].move_direction == Vector2.ZERO:
-			trigger_ai_dog("AI_GuideDog")
 	#
 	_ui.start_game()
 	Sound_Manager.initialize()
 	Game_Camera.initialize(_dog_owner.global_position)
 	initialized_game = true
 
-func save_time_checkpoint():
+func save_checkpoints():
 	time_checkpoint = _ui.get_time_left()
+	nervousness_checkpoint = _dog_owner.total_nervouseness
 	
 func reached_park_bench(body):
 	print("reached bench")
@@ -189,6 +178,10 @@ func new_highscore(score:float) ->bool:
 func place_dog_food():
 	
 	_dog.distractionsources.get_node("DogFood").visible = true
+	
+	var r = randi_range(0,4)
+	var c = randi_range(0,3)
+	_dog.distractionsources.get_node("DogFood").region_rect = Rect2(c*16, r*16, 16, 16)
 	
 	var posx = randi_range(13,392)
 	var posy = randi_range(1095,1350)

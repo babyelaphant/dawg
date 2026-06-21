@@ -427,3 +427,5 @@ shape = SubResource("RectangleShape2D_t4hbm")
 [node name="Line2D1" type="Line2D" parent="." unique_id=1890613909]
 
 [node name="Line2D2" type="Line2D" parent="." unique_id=1678984821]
+
+[node name="AudioSource" type="AudioStreamPlayer2D" parent="." unique_id=353656295]

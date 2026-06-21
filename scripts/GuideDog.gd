@@ -24,19 +24,18 @@ var dogs:Array[GuideDog] = []
 var initialized = false
 var can_update_movement_cache:bool = true
 var wall_hit_point:Vector2
-
+var start_barking:bool =false
 @export var distractionsources: Node2D
 @export var test:Sprite2D
 @export var max_distance:float = 30
 @export var ai_path:Node2D
-
+@onready var audioSource = get_node("AudioSource")
+@export var barksound:String = "bark2"
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	Game_Manager.register_dog(self)
 	set_process_input(true)
-	collision_mask = 1 # e.g., Layer 1
-	can_move = true
-
+	#can_move = true
 
 func check_obstacles():
 	var hitResult = {}
@@ -59,7 +58,7 @@ func check_obstacles():
 			hitResult = result
 			
 	return !hitResult.is_empty()
-	
+
 func build_movement_cache():
 	var timer = 0
 	if is_building: return
@@ -134,59 +133,70 @@ func _physics_process(delta: float) -> void:
 	var distance_to_food = (global_position - distractionsources.get_node("DogFood").global_position).length()
 	
 	if is_ai:
-		ai_controlled =  !nearby_dog.is_empty() and nearby_dog[0].ai_controlled #and abs((nearby_dog[0] as GuideDog).move_direction.angle_to(move_direction)) > PI/2
+		ai_controlled =  !nearby_dog.is_empty()  and nearby_dog[0].ai_controlled#and abs((nearby_dog[0] as GuideDog).move_direction.angle_to(move_direction)) > PI/2 #and nearby_dog[0].ai_controlled 
 	else:
 		ai_controlled =  abs(Input.get_axis("move_left", "move_right")) < 0.1 \
 		and abs(Input.get_axis("move_up", "move_down")) < 0.1 and ((smells_dog_food() and distance_to_food <=40) or (!nearby_dog.is_empty()) and (velocity.length() < 0.1 or  abs((nearby_dog[0] as GuideDog).move_direction.angle_to(move_direction)) > PI/2))
-	
-	if !ai_controlled:move_speed=30
-	
-	if ai_controlled and nearby_dog != []:
-		print("smells dog")
-		move_direction = (nearby_dog[0].global_position - global_position).normalized()
-		move_speed = 30 + ((nearby_dog[0].global_position - global_position).length()/150)*10
-		if (nearby_dog[0].global_position - global_position).length() > 15:
-			velocity = move_direction.normalized()* move_speed
-		else:
-			velocity = velocity.move_toward(Vector2.ZERO, move_speed)
-		move_and_slide()
-		
-	elif !is_ai:
-		if !ai_controlled:
-			move_direction.x = Input.get_axis("move_left", "move_right")
-			move_direction.y = Input.get_axis("move_up", "move_down")
-			move_direction = move_direction.normalized()
-			
-			print("MDIR: ", move_direction)
-		
-		elif !Game_Manager.is_objective_completed("find food") and smells_dog_food():
-			
+
+	if !is_ai:
+		if  !Game_Manager.is_objective_completed("find food") and smells_dog_food():
 			print("smells dog food")
 			
 			if distance_to_food < 40:
 				move_direction = (distractionsources.get_node("DogFood").global_position - global_position).normalized()
 				move_speed = 30 + (distance_to_food/40)*10
+				if !start_barking:
+					Sound_Manager.play_sound($AudioSource,"bark2")
+					start_barking = true
 			else:
 				move_speed = 30 + (distance_to_food/200)*10
 				
-			if distance_to_food > 2:
+			if distance_to_food > 5:
 				velocity = move_direction.normalized()* move_speed
 			else:
 				velocity = velocity.move_toward(Vector2.ZERO, move_speed)
 				if !eating_food:
 					eating_food = true
 					eat_food()
+	
+	if nearby_dog != []:
+		print("smells dog")
+		
+		if (nearby_dog[0].global_position - global_position).length() > 15:
+			
+			if !start_barking and !nearby_dog[0].start_barking:
+				Sound_Manager.play_sound($AudioSource,barksound)
+				start_barking= true
+			elif !start_barking:
+				start_barking= true
+				await get_tree().create_timer(1).timeout
+				Sound_Manager.play_sound($AudioSource,barksound)
+	
+			if ai_controlled:
+				move_direction = (nearby_dog[0].global_position - global_position).normalized()
+				move_speed = 30 + ((nearby_dog[0].global_position - global_position).length()/150)*10
+				velocity = move_direction.normalized()* move_speed
 					
 		else:
-			velocity = velocity.move_toward(Vector2.ZERO, move_speed)		
-			
-		if !is_ai and !eating_food:
+			velocity = velocity.move_toward(Vector2.ZERO, move_speed)
+	
+	if !is_ai:
+		if !ai_controlled:
+			move_direction.x = Input.get_axis("move_left", "move_right")
+			move_direction.y = Input.get_axis("move_up", "move_down")
+			move_direction = move_direction.normalized()
+			velocity = move_direction.normalized()* move_speed
+		if !eating_food:
 			move_and_slide()	
 	
-	elif can_move and !ai_controlled:
-		print("moving ai")
-		on_started_moving.emit(self)
-		move_ai()
+	else:
+		if !ai_controlled:
+			move_ai()
+		elif velocity.length() > 0:
+			move_and_slide()
+	
+	if start_barking and !smells_dog() and !smells_dog_food():
+		start_barking = false
 		
 	if(move_direction-old_move_direction).length() >0.1:
 		can_update_movement_cache = false

@@ -17,8 +17,7 @@ func initialize(position:Vector2):
 func _process(delta: float) -> void:
 	pass
 
-func move(destination:Vector2):
+func move(destination:Vector2, delta:float):
 	if !initialized:
 		return
-	camera.global_position = camera.global_position.lerp(destination,camera.get_process_delta_time()*speed)
-		
+	camera.global_position = camera.global_position.lerp(destination,delta*2)
