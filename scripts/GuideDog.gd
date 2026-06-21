@@ -134,7 +134,7 @@ func _physics_process(delta: float) -> void:
 	var distance_to_food = (global_position - distractionsources.get_node("DogFood").global_position).length()
 	
 	if is_ai:
-		ai_controlled =  !nearby_dog.is_empty() #and abs((nearby_dog[0] as GuideDog).move_direction.angle_to(move_direction)) > PI/2
+		ai_controlled =  !nearby_dog.is_empty() and nearby_dog[0].ai_controlled #and abs((nearby_dog[0] as GuideDog).move_direction.angle_to(move_direction)) > PI/2
 	else:
 		ai_controlled =  abs(Input.get_axis("move_left", "move_right")) < 0.1 \
 		and abs(Input.get_axis("move_up", "move_down")) < 0.1 and ((smells_dog_food() and distance_to_food <=40) or (!nearby_dog.is_empty()) and (velocity.length() < 0.1 or  abs((nearby_dog[0] as GuideDog).move_direction.angle_to(move_direction)) > PI/2))
@@ -195,15 +195,9 @@ func _physics_process(delta: float) -> void:
 			can_move=true
 			#build_movement_cache()
 			
-	if(move_direction-old_move_direction).length() > 0.5:		
-		#if velocity.length() > 0 and move_direction != Vector2.ZERO:
+	if(move_direction-old_move_direction).length() > 0.1:		
 		on_move_direction_changed.emit(self)
-		print("dog dir changed")
-		#if old_move_direction == Vector2.UP or old_move_direction == Vector2.RIGHT or old_move_direction == Vector2.DOWN or old_move_direction== Vector2.LEFT:
-		#offset = old_move_direction
-		offset = wall_normal
-			
-	print("diffi: ", (move_direction-old_move_direction).length())
+
 	if move_direction and within_max_distance():
 		velocity = move_direction * move_speed
 	else:
