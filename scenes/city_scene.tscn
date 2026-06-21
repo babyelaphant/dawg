@@ -119555,6 +119555,7 @@ position = Vector2(0, 1)
 metadata/_edit_horizontal_guides_ = [1304.0]
 
 [node name="colliders_neighborhood" type="StaticBody2D" parent="." unique_id=1328686274]
+visible = false
 z_index = 11
 position = Vector2(0, -1)
 
@@ -120209,7 +120210,7 @@ rotation_smoothing_enabled = true
 process_mode = 1
 z_index = 6
 z_as_relative = false
-position = Vector2(977.0001, 786)
+position = Vector2(276.00006, 1322)
 scale = Vector2(0.99855965, 1.001158)
 motion_mode = 1
 up_direction = Vector2(0, 1)
@@ -120223,7 +120224,7 @@ test = NodePath("../Test")
 [node name="AnimatedSprite" type="AnimatedSprite2D" parent="Dog Owner" unique_id=321962670]
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_jbj1t")
-animation = &"walk_nw"
+animation = &"idle_s"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Dog Owner" unique_id=1565230904]
 position = Vector2(0.78897095, 5.000122)
@@ -120256,7 +120257,8 @@ current = true
 [node name="command_stop" type="AudioStreamPlayer2D" parent="Dog Owner" unique_id=2053470318]
 
 [node name="GuideDog" parent="." unique_id=1338871032 node_paths=PackedStringArray("distractionsources", "test") instance=ExtResource("19_cb3sn")]
-position = Vector2(969, 802.00006)
+z_index = 10
+position = Vector2(268, 1340)
 scale = Vector2(10, 10)
 distractionsources = NodePath("../DistractionSources")
 test = NodePath("../Test")
