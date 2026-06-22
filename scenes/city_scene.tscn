@@ -119984,10 +119984,12 @@ wait_time = 280.0
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1029459694]
 
 [node name="UIManager" type="Node" parent="CanvasLayer" unique_id=1303972121]
+process_mode = 3
 script = ExtResource("16_ct7dq")
 metadata/_custom_type_script = "uid://cfhn45a5lr640"
 
 [node name="Nervouseness_Meter" type="TextureProgressBar" parent="CanvasLayer/UIManager" unique_id=277615765]
+process_mode = 1
 custom_minimum_size = Vector2(150, 0)
 anchors_preset = 7
 anchor_left = 0.5
@@ -120020,6 +120022,7 @@ theme_override_font_sizes/font_size = 24
 text = "Nervouseness"
 
 [node name="Command_Label" type="Label" parent="CanvasLayer/UIManager" unique_id=1116761721]
+process_mode = 1
 z_index = 10
 offset_left = 568.0
 offset_right = 608.0
@@ -120067,6 +120070,7 @@ clip_contents = false
 layout_direction = 2
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("18_en8l0")
+theme_override_font_sizes/normal_font_size = 24
 fit_content = true
 autowrap_mode = 0
 autowrap_trim_flags = 0
@@ -120258,9 +120262,8 @@ position = Vector2(-288.4154, -1333.4558)
 scale = Vector2(1.0014424, 0.9988433)
 current = true
 
-[node name="command_go" type="AudioStreamPlayer2D" parent="Dog Owner" unique_id=1644667048]
-
-[node name="command_stop" type="AudioStreamPlayer2D" parent="Dog Owner" unique_id=2053470318]
+[node name="AudioSource" type="AudioStreamPlayer2D" parent="Dog Owner" unique_id=2053470318]
+volume_db = 6.0
 
 [node name="GuideDog" parent="." unique_id=1338871032 node_paths=PackedStringArray("distractionsources", "test") instance=ExtResource("19_cb3sn")]
 z_index = 10

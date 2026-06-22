@@ -148,6 +148,8 @@ func _physics_process(delta: float) -> void:
 				if !start_barking:
 					Sound_Manager.play_sound($AudioSource,"bark2")
 					start_barking = true
+					await get_tree().create_timer(4).timeout
+					start_barking = false
 			else:
 				move_speed = 30 + (distance_to_food/200)*10
 				
@@ -167,9 +169,12 @@ func _physics_process(delta: float) -> void:
 			if !start_barking and !nearby_dog[0].start_barking:
 				Sound_Manager.play_sound($AudioSource,barksound)
 				start_barking= true
+				await get_tree().create_timer(randf_range(1,2)).timeout
+				start_barking= false
 			elif !start_barking:
 				start_barking= true
-				await get_tree().create_timer(1).timeout
+				await get_tree().create_timer(randf_range(1,2)).timeout
+				start_barking= false
 				Sound_Manager.play_sound($AudioSource,barksound)
 	
 			if ai_controlled:
@@ -195,9 +200,6 @@ func _physics_process(delta: float) -> void:
 		elif velocity.length() > 0:
 			move_and_slide()
 	
-	if start_barking and !smells_dog() and !smells_dog_food():
-		start_barking = false
-		
 	if(move_direction-old_move_direction).length() >0.1:
 		can_update_movement_cache = false
 		if old_move_direction == Vector2.ZERO:

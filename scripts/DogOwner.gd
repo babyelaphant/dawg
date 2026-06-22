@@ -22,7 +22,6 @@ var base_nervousness:float = 4
 var guide_dog:GuideDog
 var dog_position_offset:Vector2 = Vector2.ZERO
 var temp1:Vector2
-
 @export var test:Sprite2D
 
 var current_command:String= "STOP"
@@ -69,27 +68,34 @@ func command_dog(repeat:bool = false):
 		print("not rep")
 		if current_command == "STOP":
 			current_command = "GO"
+			var cmds = ["go1","go2", "go3", "go4"]
+			Sound_Manager.play_commandsound($AudioSource,cmds[randi_range(0,3)])
 		else:
 			current_command = "STOP"
-	
+			var cmds = ["stop1","stop2 "]
+			Sound_Manager.play_commandsound($AudioSource,cmds[randi()%2])
+		
 	else:
 		print("repeating cmd")
+		if current_command == "STOP":
+			var cmds = ["hey1","wait1", "hey2", "wait2","stop1", "stop2"]
+			Sound_Manager.play_commandsound($AudioSource,cmds[randi_range(0,5)])
+		else:
+			var cmds = ["hey1","hey2", "go1", "go4"]
+			Sound_Manager.play_commandsound($AudioSource,cmds[randi_range(0,3)])
 	
 	Game_Manager._ui.show_command(current_command)
 	response_delay = 0
 	waiting_for_response = true
-	while !Game_Manager.gamelost and ! Game_Manager.gamewon and response_delay < critical_response_delay and !guide_dog.respond_to_command(current_command):
+	while !Game_Manager.gamelost and ! Game_Manager.gamewon and !Game_Manager.game_paused and response_delay < critical_response_delay and !guide_dog.respond_to_command(current_command):
 		await get_tree().process_frame
 		response_delay += get_process_delta_time()
 
 	if response_delay >= critical_response_delay:
 		command_dog(true)
-		print("critical response delayy")
-		print("making nervous")
 		make_nervous(base_nervousness)
 	else:
 		make_nervous((response_delay/critical_response_delay)*base_nervousness)
-		print("not waiting for respo")
 		waiting_for_response = false
 
 
@@ -119,7 +125,7 @@ func _ready() -> void:
 	randomize()
 	for i in range(10):
 		nervouseness_levels.append(NervousenessLevel.new(self, 30+i*7))
-			
+	
 func initialize(guidedog:GuideDog, dog_pos_offset) -> void:
 	guide_dog = guidedog
 	dog_position_offset = dog_pos_offset
@@ -136,6 +142,9 @@ func _process(delta: float) -> void:
 	Game_Camera.move(global_position,delta)
 	if waiting_for_response or guide_dog.eating_food:
 		timer = 0
+		return
+	
+	if Game_Manager.game_paused:
 		return
 		
 	timer += delta

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ckcuvrdvwp2um"]
 
-[ext_resource type="Script" uid="uid://bghrl6gfbpcl" path="res://text_box.gd" id="1_qdwih"]
+[ext_resource type="Script" uid="uid://cta58qcak6ggd" path="res://text_box.gd" id="1_qdwih"]
 [ext_resource type="Texture2D" uid="uid://bo0om4vjj2hov" path="res://assets/test_box.png" id="2_3ojeh"]
 [ext_resource type="FontFile" uid="uid://vtsdx1rb101t" path="res://assets/PeaberryBase.ttf" id="3_nq18v"]
 
@@ -29,6 +29,7 @@ theme_override_constants/margin_bottom = 8
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("3_nq18v")
+theme_override_font_sizes/font_size = 20
 
 [node name="LetterDisplayTimer" type="Timer" parent="." unique_id=1469315653]
 one_shot = true

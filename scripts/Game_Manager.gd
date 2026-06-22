@@ -138,7 +138,7 @@ func initialize_game():
 	Game_Camera.initialize(_dog_owner.global_position)
 	initialized_game = true
 
-func save_checkpoints():
+func save_checkpoints(body):
 	time_checkpoint = _ui.get_time_left()
 	nervousness_checkpoint = _dog_owner.total_nervouseness
 	
@@ -228,10 +228,10 @@ func new_attempt():
 func start_from_last_checkpoint():
 	_dog.global_position = checkpoint.global_position
 	_dog_owner.global_position = checkpoint.global_position - Vector2.RIGHT*10-Vector2.RIGHT*10
-	_dog_owner.reset_nervousness(nervousness_checkpoint)
 	while(game_paused):
 		await get_tree().process_frame
-	_ui.reset_timer(time_checkpoint)
+	_dog_owner.reset_nervousness(nervousness_checkpoint)
+	#_ui.reset_timer(time_checkpoint)
 	#_ui.start_timer()
 
 func game_lost():
